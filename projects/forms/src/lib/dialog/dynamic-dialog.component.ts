@@ -3,17 +3,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ComponentRef,
   HostBinding,
   OnDestroy,
   OnInit,
   ViewChild,
   ViewContainerRef
 } from "@angular/core";
-import { DialogFormRef, DialogMessage } from "../dialog-form-ref";
+import { DialogFormRef, DialogMessage } from "./dialog-form-ref";
 import { Subscription } from "rxjs";
-import { FormImpl, FormSchema } from "../../core/form";
-import { DynamicFormComponent } from "../../form/dynamic-form/dynamic-form.component";
+import { FormImpl, FormSchema } from "../core/form";
+import { DynamicFormComponent } from "../form/dynamic-form.component";
 
 @Component({
   selector: "fui-dynamic-dialog-form",
@@ -112,8 +111,8 @@ export class DynamicDialogComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   onSave() {
-    const model = this.form.model;
+    const model = this.form.model2;
 
-    this.ref.save(model);
+    this.ref.save(model.data);
   }
 }

@@ -10,20 +10,21 @@ import {
   ViewChild,
   ViewContainerRef
 } from "@angular/core";
-import { Form, FormImpl, FormModel, FormSchema } from "../../core/form";
+import { Form, FormImpl, FormSchema } from "../core/form";
 import { ReplaySubject, Subscription } from "rxjs";
-import { TextCtrlComponent } from "../../form-controls/text-ctrl/text-ctrl.component";
-import { NumberCtrlComponent } from "../../form-controls/number-ctrl/number-ctrl.component";
-import { TextAreaCtrlComponent } from "../../form-controls/textarea-ctrl/text-area-ctrl.component";
-import { SelectCtrlComponent } from "../../form-controls/select-ctrl/select-ctrl.component";
-import { SelectMultiCtrlComponent } from "../../form-controls/select-multi-ctrl/select-multi-ctrl.component";
+import { TextCtrlComponent } from "../form-controls/text-ctrl/text-ctrl.component";
+import { NumberCtrlComponent } from "../form-controls/number-ctrl/number-ctrl.component";
+import { TextAreaCtrlComponent } from "../form-controls/textarea-ctrl/text-area-ctrl.component";
+import { SelectCtrlComponent } from "../form-controls/select-ctrl/select-ctrl.component";
+import { SelectMultiCtrlComponent } from "../form-controls/select-multi-ctrl/select-multi-ctrl.component";
 import { FormGroup } from "@angular/forms";
-import { BaseCtrl } from "../../form-controls/base.ctrl";
-import { switchMap } from "rxjs/operators";
-import { AnyField, NumberField, Select, SelectMulti, TextAreaField, TextField } from "../../core/metadata-builders";
-import { V } from "../../utils";
+import { BaseCtrl } from "../form-controls/base.ctrl";
+import { FieldBuilderBase, NumberField, Select, SelectMulti, TextAreaField, TextField } from "../core/field.builders";
+import { Validation } from "../util/validation";
+import { FormModel } from "../core/form-model";
+import { FieldConfigBase } from "../core/field";
 
-const getComponent = (field: AnyField): Type<BaseCtrl<any>> => {
+const getComponent = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldConfigBase<any>>> => {
   if (field instanceof TextField) {
     return TextCtrlComponent;
   }
@@ -52,22 +53,19 @@ const getComponent = (field: AnyField): Type<BaseCtrl<any>> => {
 })
 export class DynamicFormComponent implements AfterViewInit, OnDestroy {
   private readonly configSubject = new ReplaySubject<FormImpl<FormSchema>>(1);
-  private componentSubs: Subscription[] = [];
-  private formSpecificSubs: Subscription[] = [];
+  private subs: Subscription[] = [];
+  private formInstanceSubs: Subscription[] = [];
   private fieldRefs: FieldCompoentRef[] = [];
 
-  @ViewChild("formFields", { read: ViewContainerRef })
+  @ViewChild("formFields", { read: ViewContainerRef, static: true })
   public viewContainerRef!: ViewContainerRef;
 
-  get valid() {
-    return this.formGroup.status === "VALID";
-  }
-
+  valid = true;
   modelHasChanged = false;
 
   private formImpl?: FormImpl<FormSchema>;
 
-  formGroup = new FormGroup({});
+  private formGroup = new FormGroup({});
 
   @Input()
   set formConfig(form: Form<FormSchema>) {
@@ -79,7 +77,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
   }
 
   clearForm() {
-    this.formSpecificSubs.forEach(item => {
+    this.formInstanceSubs.forEach(item => {
       item.unsubscribe();
     });
     this.fieldRefs = [];
@@ -92,73 +90,82 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
   constructor(private readonly cd: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
-    const configSub = this.configSubject.subscribe(formConfig => {
-      this.handleNewForm(formConfig);
-    });
+    this.subs.push(
+      this.configSubject.subscribe(formConfig => {
+        this.handleNewForm(formConfig);
+      })
+    );
 
-    const updateFormSubject = this.configSubject
-      .pipe(switchMap(config => config.__updateFormSubject))
-      .subscribe(res => {
-        // TODO UPDATE FORM??
-        console.log(res);
-        console.log(res);
-        console.log(res);
-        console.log(res);
-      });
+    this.subs.push(
+      this.formGroup.valueChanges.subscribe(() => {
+        this.handleFormValueChanges();
+      })
+    );
 
-    const valueChangesSub = this.formGroup.valueChanges.subscribe(() => {
-      this.handleFormValueChanges();
+    setTimeout(() => {
+      this.valid = this.formGroup.valid;
+    }, 0);
+  }
+
+  private getCurrentModel(): FormModel.OptionalTypeOf<any> {
+    const model: FormModel.OptionalTypeOf<any> = {};
+    this.fieldRefs.forEach(field => {
+      const key = field.key;
+      // console.log(key + " [valid]: " + field.instance.formControl.valid);
+      const value = field.instance.getValue();
+      model[key] = value;
     });
-    this.componentSubs.push(configSub);
-    this.componentSubs.push(valueChangesSub);
-    this.componentSubs.push(updateFormSubject);
+    return model;
   }
 
   private handleFormValueChanges() {
     if (!this.formImpl) {
       return;
     }
+    console.log("HANDEL FORM CHANGES");
     this.modelHasChanged = true;
+
     const isValid = this.formGroup.valid;
-    const model: FormModel.OptionalTypeOf<any> = {};
-    this.fieldRefs.forEach(field => {
-      const key = field.key;
-      const value = field.instance.getValue();
-      model[key] = value;
-    });
-    // this.fieldRefs.forEach((el) => {
-    //   if (el.disable) {
-    //     el.disable(formGroupValue);
-    //   }
-    // });
+    const model = this.getCurrentModel();
+    this.checkDisableFields();
     if (isValid) {
-      const output = FormModel.valid(model);
-      this.formImpl._emitModel(output);
+      this.formImpl._emitModel(FormModel.valid(model));
     } else {
       this.formImpl._emitModel(FormModel.inValid(model));
     }
+    this.valid = isValid;
+
+    this.cd.detectChanges();
   }
 
   private handleNewForm(formConfig: FormImpl<FormSchema>) {
     if (!this.viewContainerRef) {
       return;
     }
+
+    // Clear subscriptions from last formInstance
+    this.formInstanceSubs.forEach(sub => {
+      sub.unsubscribe();
+    });
+    this.formInstanceSubs = [];
     this.viewContainerRef.clear();
     const disableCallbacks = formConfig._getDisabledCallbacks();
     const fieldEntries = Object.entries(formConfig.fields);
+
     fieldEntries.forEach(([key, field]) => {
       const comp = getComponent(field);
       const componentRef = this.viewContainerRef.createComponent(comp);
       const instance = componentRef.instance;
-      instance.field = field;
-      const disable = disableCallbacks.get(key);
+      instance.field = field.__config;
+      const disable = disableCallbacks[key];
       this.formGroup.addControl(key, instance.formControl);
       this.fieldRefs.push({ key, componentRef, instance, disable });
     });
+    this.checkDisableFields();
 
     // Set local modelChangeObservable
-    formConfig.__updateFormSubject.subscribe(res => {
-      if (!V.isRecord(res)) {
+    const updateFormSubscription = formConfig.__updateFormSubject.subscribe(res => {
+      if (!Validation.isRecord(res)) {
         return;
       }
       this.fieldRefs.forEach(ref => {
@@ -167,8 +174,27 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
           ref.instance.setValue(newValue);
         }
       });
+      this.cd.detectChanges();
     });
+    this.formInstanceSubs.push(updateFormSubscription);
     this.cd.detectChanges();
+  }
+
+  private checkDisableFields() {
+    const model = this.getCurrentModel();
+    this.fieldRefs.forEach(field => {
+      const fn = field.disable;
+      if (typeof fn === "function") {
+        console.group(field.key);
+        fn(model);
+        const disableField = fn(model);
+        if (typeof disableField === "boolean") {
+          field.instance.disabled = disableField;
+          field.componentRef.changeDetectorRef.detectChanges();
+        }
+        console.groupEnd();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -178,7 +204,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
 
 interface FieldCompoentRef {
   readonly key: string;
-  readonly componentRef: ComponentRef<BaseCtrl<AnyField>>;
-  readonly instance: BaseCtrl<AnyField>;
+  readonly componentRef: ComponentRef<BaseCtrl<FieldConfigBase<any>>>;
+  readonly instance: BaseCtrl<FieldConfigBase<any>>;
   readonly disable?: <T extends {}>(model: T) => boolean;
 }

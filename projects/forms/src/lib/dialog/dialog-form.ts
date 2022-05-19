@@ -1,4 +1,4 @@
-import { FormImpl, FormSchema } from "./form";
+import { FormImpl, FormSchema } from "../core/form";
 
 export interface DialogForm<T extends FormSchema> {
   form: FormImpl<T>;
@@ -12,7 +12,7 @@ export interface DialogForm<T extends FormSchema> {
   saveButton(text: string, disableUntilModelChanged?: boolean): DialogForm<T>;
 
   setModel(model: {
-    [P in keyof T]: T[P]["_metadata"]["__optionalOutputType"];
+    [P in keyof T]: T[P]["__config"]["__optionalOutputType"];
   }): DialogForm<T>;
 
   clone(): DialogForm<T>;
@@ -61,7 +61,7 @@ export class DialogFormImpl<T extends FormSchema> implements DialogForm<T> {
     return this;
   }
 
-  setModel(model: { [P in keyof T]: T[P]["_metadata"]["__outputType"] }) {
+  setModel(model: { [P in keyof T]: T[P]["__config"]["__outputType"] }) {
     this.form.__updateFormSubject.next(model);
     return this;
   }

@@ -7,17 +7,15 @@
   }
 </style>
 <mat-form-field>
-  <mat-label>{{ field._metadata._label }}</mat-label>
+  <mat-label>{{ field.label }}</mat-label>
   <input
     type="number"
     autocomplete="off"
     matInput
-    [placeholder]="field._metadata.placeholder"
+    [placeholder]="field.placeholder"
     [formControl]="formControl"
-    [min]="field._metadata._min"
-    [max]="field._metadata._max"
+    [min]="field._min"
+    [max]="field._max"
   />
-  <mat-hint *ngIf="field._metadata._hint"
-    >{{ field._metadata._hint }}
-  </mat-hint>
+  <mat-hint *ngIf="field.hint">{{ field.hint }} </mat-hint>
 </mat-form-field>

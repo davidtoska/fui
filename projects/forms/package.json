@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^13.3.0",
-    "@angular/core": "^13.3.0",
-    "@fui/forms-core": "1.0.0"
+    "@angular/core": "^13.3.0"
   },
+  "ng-add": {
+    "save": "true"
+  },
+  "schematics": "./schematics/collection.json",
   "dependencies": {
     "tslib": "^2.3.0"
   }

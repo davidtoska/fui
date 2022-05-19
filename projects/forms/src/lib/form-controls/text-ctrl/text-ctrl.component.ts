@@ -1,36 +1,36 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BaseCtrl } from '../../dialog-form/base.ctrl';
-import { Validator, ValidatorFn, Validators } from '@angular/forms';
-import { TextField } from '../../dialog-form/models/metadata-builders';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { BaseCtrl } from "../base.ctrl";
+import { ValidatorFn, Validators } from "@angular/forms";
+import { TextConfig } from "../../core/field";
 
 @Component({
-  templateUrl: './text-ctrl.component.html',
-  styleUrls: ['./text-ctrl.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: "./text-ctrl.component.html",
+  styleUrls: ["./text-ctrl.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextCtrlComponent extends BaseCtrl<TextField> {
+export class TextCtrlComponent extends BaseCtrl<TextConfig> {
   constructor() {
-    super(new TextField());
+    super(new TextConfig(""));
   }
 
-  addValidators(field: TextField) {
+  addValidators(field: TextConfig) {
     const validators: ValidatorFn[] = [];
-    if (field._metadata._required) {
+    if (field.required) {
       validators.push(Validators.required);
     }
     this.formControl.addValidators(validators);
   }
 
   setValue(value: unknown): void {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this.field._metadata._defaultValue);
+      this.formControl.setValue(this.field.defaultValue);
     }
   }
 
-  getValue(): TextField['_metadata']['__optionalOutputType'] {
+  getValue(): TextConfig["__optionalOutputType"] {
     const value = this.formControl.value;
-    return typeof value === 'string' ? value : '';
+    return typeof value === "string" ? value : "";
   }
 }

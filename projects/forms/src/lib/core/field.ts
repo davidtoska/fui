@@ -1,70 +1,106 @@
 import { LabeledValue } from "./labeled-value";
 
-export class FieldBase<OUT> {
+export abstract class FieldConfigBase<OUT> {
   __outputType!: OUT;
   __optionalOutputType!: OUT | null;
-  _initialValue: OUT | null = null;
-  _hint: string = "";
-  _label: string = "";
-  _required: boolean = true;
-  readonly _emptyValue = null;
-  readonly _defaultValue: OUT | null;
+  initialValue: OUT | null = null;
+  hint: string = "";
+  label: string = "";
+  required: boolean = true;
+  readonly emptyValue = null;
+  readonly defaultValue: OUT | null;
   placeholder = "";
 
-  constructor(defaultValue: OUT | null) {
-    this._defaultValue = defaultValue;
-    this._initialValue = defaultValue;
+  protected constructor(defaultValue: OUT | null) {
+    this.defaultValue = defaultValue;
+    this.initialValue = defaultValue;
   }
+  abstract validate(value: unknown): value is OUT;
 }
 
-export class TextMeta extends FieldBase<string> {
-  _minLength = 0;
-  _maxLength = 10000;
-  _placeholder = "";
+export class TextConfig extends FieldConfigBase<string> {
+  minLength = 0;
+  maxLength = 10000;
 
   constructor(defaultValue: "") {
     super(defaultValue);
   }
+
+  validate(value: unknown): value is string {
+    if (typeof value !== "string") {
+      return false;
+    }
+    if (value.length < this.minLength) {
+      return false;
+    }
+    if (value.length > this.minLength) {
+      return false;
+    }
+    return true;
+  }
 }
 
-export class TextAreaMeta extends TextMeta {
-  _resizable = false;
+export class TextAreaConfig extends TextConfig {
+  resizable = false;
   _rows = 3;
+
   constructor() {
     super("");
   }
 }
 
-export class SelectMetaBase<V> extends FieldBase<V> {
+abstract class SelectConfigBase<V> extends FieldConfigBase<V> {
+  _options: LabeledValue[];
+
+  protected constructor(options: LabeledValue[]) {
+    super(null);
+    this._options = options;
+  }
+}
+
+export class SelectMultiConfig<V> extends FieldConfigBase<V> {
   _options: LabeledValue[];
 
   constructor(options: LabeledValue[]) {
     super(null);
     this._options = options;
   }
-}
 
-export class SelectMultiMeta<V> extends FieldBase<V> {
-  _options: LabeledValue[];
+  /**
+   *
+   * @param value
+   */
+  validate(value: unknown): value is V {
+    const isArray = Array.isArray(value);
 
-  constructor(options: LabeledValue[]) {
-    super(null);
-    this._options = options;
+    // TODO
+    return !this.required;
   }
 }
 
-export class SelectMeta<V> extends SelectMetaBase<V> {
+export class SelectConfig<V> extends SelectConfigBase<V> {
   constructor() {
     super([]);
-    this._required = true;
+    this.required = true;
+  }
+  validate(value: unknown): value is V {
+    const isArray = Array.isArray(value);
+
+    // TODO
+    return !this.required;
   }
 }
 
-export class NumberMeta<V = number> extends FieldBase<V> {
+export class NumberMeta<V = number> extends FieldConfigBase<V> {
   _min = 0;
   _max = 100;
 
   constructor(defaultValue: V | null) {
     super(defaultValue);
+  }
+
+  override validate(value: unknown): value is V {
+    // TODO
+    return typeof value === "number";
   }
 }

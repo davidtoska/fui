@@ -1,36 +1,37 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { BaseCtrl } from '../../dialog-form/base.ctrl';
-import { FormControl, ValidatorFn, Validators } from '@angular/forms';
-import { TextAreaField, TextField } from '../../dialog-form/models/metadata-builders';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { BaseCtrl } from "../base.ctrl";
+import { ValidatorFn, Validators } from "@angular/forms";
+import { TextAreaField } from "../../core/field.builders";
+import { TextAreaConfig } from "../../core/field";
 
 @Component({
-  templateUrl: './text-area-ctrl.component.html',
-  styleUrls: ['./text-area-ctrl.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: "./text-area-ctrl.component.html",
+  styleUrls: ["./text-area-ctrl.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextAreaCtrlComponent extends BaseCtrl<TextAreaField> {
+export class TextAreaCtrlComponent extends BaseCtrl<TextAreaConfig> {
   constructor() {
-    super(new TextAreaField());
+    super(new TextAreaConfig());
   }
 
-  addValidators(field: TextAreaField) {
+  addValidators(field: TextAreaConfig) {
     const validators: ValidatorFn[] = [];
-    if (field._metadata._required) {
+    if (field.required) {
       validators.push(Validators.required);
     }
     this.formControl.addValidators(validators);
   }
 
   setValue(value: unknown): void {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this._field._metadata._defaultValue);
+      this.formControl.setValue(this._field.defaultValue);
     }
   }
 
-  getValue(): TextAreaField['_metadata']['__optionalOutputType'] {
+  getValue(): TextAreaField["__config"]["__optionalOutputType"] {
     const value = this.formControl.value;
-    return typeof value === 'string' ? value : '';
+    return typeof value === "string" ? value : "";
   }
 }

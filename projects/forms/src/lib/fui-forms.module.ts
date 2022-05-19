@@ -13,7 +13,7 @@ import { TextAreaCtrlComponent } from "./form-controls/textarea-ctrl/text-area-c
 import { SelectCtrlComponent } from "./form-controls/select-ctrl/select-ctrl.component";
 import { MatSelectModule } from "@angular/material/select";
 import { SelectMultiCtrlComponent } from "./form-controls/select-multi-ctrl/select-multi-ctrl.component";
-import { DynamicFormComponent } from "./form/dynamic-form/dynamic-form.component";
+import { DynamicFormComponent } from "./form/dynamic-form.component";
 
 @NgModule({
   declarations: [
@@ -39,4 +39,4 @@ import { DynamicFormComponent } from "./form/dynamic-form/dynamic-form.component
   ],
   exports: [DynamicDialogComponent, DynamicFormComponent]
 })
-export class DialogModule {}
+export class FuiFormsModule {}
