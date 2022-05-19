@@ -1,0 +1,13 @@
+<ng-container *seLet="gen; let value">
+  <h1>{{ value.data.id }}</h1>
+  <pre>{{ value | json }}</pre>
+</ng-container>
+<ng-container *seLet="data as obs">
+  <h1>{{ obs.name}}</h1>
+  <h1>{{ obs.data.id}}</h1>
+  {{ obs | json }}</ng-container
+>
+
+
+<fui-dynamic-form [formConfig]="form1" #formEl></fui-dynamic-form>
+<button mat-button [disabled]="!formEl.valid">Submit</button>

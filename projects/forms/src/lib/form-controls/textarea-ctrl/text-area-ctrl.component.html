@@ -1,0 +1,25 @@
+<style>
+  :host {
+    width: 100%;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+</style>
+<mat-form-field>
+  <mat-label>{{ field._metadata._label }}</mat-label>
+  <textarea
+    type="text"
+    autocomplete="off"
+    matInput
+    [formControl]="formControl"
+    [placeholder]="field._metadata._placeholder"
+    [rows]="field._metadata._rows"
+    [minlength]="field._metadata._minLength"
+    [maxLength]="field._metadata._maxLength"
+    [ngStyle]="{ resize: field._metadata._resizable ? 'horizontal' : 'none' }"
+  ></textarea>
+  <mat-hint *ngIf="field._metadata._hint"
+    >{{ field._metadata._hint }}
+  </mat-hint>
+</mat-form-field>

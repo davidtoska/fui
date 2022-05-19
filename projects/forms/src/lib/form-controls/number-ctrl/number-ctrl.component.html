@@ -1,0 +1,23 @@
+<style>
+  :host {
+    width: 100%;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+</style>
+<mat-form-field>
+  <mat-label>{{ field._metadata._label }}</mat-label>
+  <input
+    type="number"
+    autocomplete="off"
+    matInput
+    [placeholder]="field._metadata.placeholder"
+    [formControl]="formControl"
+    [min]="field._metadata._min"
+    [max]="field._metadata._max"
+  />
+  <mat-hint *ngIf="field._metadata._hint"
+    >{{ field._metadata._hint }}
+  </mat-hint>
+</mat-form-field>
