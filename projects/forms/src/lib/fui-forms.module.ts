@@ -37,6 +37,6 @@ import { DynamicFormComponent } from "./form/dynamic-form.component";
     MatSelectModule,
     ReactiveFormsModule
   ],
-  exports: [DynamicDialogComponent, DynamicFormComponent]
+  exports: [DynamicFormComponent]
 })
 export class FuiFormsModule {}
