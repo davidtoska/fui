@@ -26,7 +26,7 @@ export class TextAreaCtrlComponent extends BaseCtrl<TextAreaConfig> {
     if (typeof value === "string") {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this._field.defaultValue);
+      this.formControl.setValue(this._fieldConfig.defaultValue);
     }
   }
 

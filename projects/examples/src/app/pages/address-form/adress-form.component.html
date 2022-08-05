@@ -1,9 +1,0 @@
-<style>
-  :host {
-    width: 800px;
-    margin: 0 auto;
-    display: block;
-  }
-</style>
-<fui-dynamic-form [formConfig]="form1" #formEl></fui-dynamic-form>
-<button mat-button [disabled]="!formEl.valid" (click)="onFormSubmit()">Submit</button>

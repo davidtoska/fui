@@ -1,8 +1,12 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { AdressFormComponent } from "./pages/address-form/adress-form.component";
+import { FormExamplesComponent } from "./pages/address-form/form-examples.component";
+import { DialogFormsComponent } from "./pages/dialog-forms/dialog-forms.component";
 
-const routes: Routes = [{ path: "form1", component: AdressFormComponent }];
+const routes: Routes = [
+  { path: "form1", component: FormExamplesComponent },
+  { path: "dialog-forms", component: DialogFormsComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

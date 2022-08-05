@@ -1,12 +1,19 @@
 import { Directive, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { AnyField } from "../core/field.builders";
 import { FieldConfigBase } from "../core/field";
+import { LabeledValue } from "../types";
+
+type FormControlValues = string | number | null | Array<LabeledValue> | ReadonlyArray<LabeledValue> | LabeledValue;
 
 @Directive()
 export abstract class BaseCtrl<T extends FieldConfigBase<any>> implements OnInit, OnDestroy {
-  protected _field: T;
-  readonly formControl = new FormControl(null);
+  /**
+   * Configuration object for this form-control
+   * @protected
+   */
+  protected _fieldConfig: T;
+
+  readonly formControl = new FormControl<FormControlValues>(null);
 
   set disabled(isDisabled: boolean) {
     if (isDisabled) {
@@ -22,18 +29,23 @@ export abstract class BaseCtrl<T extends FieldConfigBase<any>> implements OnInit
   @HostBinding("style.minWidth") minWidth = "150px";
   @HostBinding("style.width") width = "100%";
 
+  /**
+   * The default configuration for this form-field;
+   * @param emptyField
+   * @protected
+   */
   protected constructor(emptyField: T) {
-    this._field = emptyField;
+    this._fieldConfig = emptyField;
   }
 
-  get field() {
-    return this._field;
+  get fieldConfig() {
+    return this._fieldConfig;
   }
 
-  set field(field: T) {
-    this._field = field;
+  set fieldConfig(field: T) {
+    this._fieldConfig = field;
     // TODO check width property, and calculate rows here?? No css in styles!
-    this.formControl.patchValue(field.initialValue, {
+    this.formControl.patchValue(field.defaultValue, {
       emitEvent: true
     });
     this.addValidators(field);
@@ -46,6 +58,7 @@ export abstract class BaseCtrl<T extends FieldConfigBase<any>> implements OnInit
    * @param value
    */
   abstract setValue(value: unknown): void;
+
   abstract getValue(): T["__optionalOutputType"];
 
   ngOnDestroy(): void {}

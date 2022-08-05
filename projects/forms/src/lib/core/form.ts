@@ -1,17 +1,10 @@
 import { Observable, ReplaySubject } from "rxjs";
-import { AnyField, FieldBuilderBase } from "./field.builders";
-import { FormModel } from "./form-model";
-import { FieldConfigBase } from "./field";
+import { FieldBuilderBase } from "./field.builders";
+import { Model } from "./model";
 
 export interface FormSchema {
   [key: string]: FieldBuilderBase<any>;
 }
-
-export interface FormSchema2 {
-  [key: string]: FieldConfigBase<any>;
-}
-
-// export type FormModelCallback<M, R> = (model: M) => R;
 
 /**
  * Public api of the dynamic form builder
@@ -31,13 +24,13 @@ export interface Form<S extends FormSchema> {
     [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] }) => boolean;
   }): Form<S>;
 
-  getValue(): FormModel.Valid<S> | FormModel.InValid<S>;
-  modelChange$: Observable<FormModel.Value<S>>;
+  getValue(): Model.Valid<S> | Model.InValid<S>;
+  modelChange$: Observable<Model.Value<S>>;
 }
 
 export class FormImpl<S extends FormSchema> implements Form<S> {
-  private modelChangeSubject = new ReplaySubject<FormModel.Value<S>>(1);
-  __updateFormSubject = new ReplaySubject<FormModel.OptionalTypeOf<S>>(1);
+  private modelChangeSubject = new ReplaySubject<Model.Value<S>>(1);
+  __updateFormSubject = new ReplaySubject<Model.TypeOfOptional<S>>(1);
 
   private disableMap: {
     [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] }) => boolean;
@@ -45,7 +38,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
 
   readonly fields: S;
   // model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] };
-  model2: FormModel.Value<S>;
+  model2: Model.Value<S>;
   modelChange$ = this.modelChangeSubject.asObservable();
 
   constructor(fields: S) {
@@ -53,11 +46,11 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
     const model: Record<string, any> = {};
     const entries = Object.entries(fields);
     entries.forEach(([key, field]) => {
-      model[key] = field.__config.initialValue;
+      model[key] = field.__config.defaultValue;
     });
-    const castedModel = model as FormModel.OptionalTypeOf<S>;
+    const castedModel = model as Model.TypeOfOptional<S>;
     // TODO VALIDATE MODEL HERE!! Seems like config object is right place for validation-fn
-    this.model2 = FormModel.inValid(castedModel);
+    this.model2 = Model.inValid(castedModel);
   }
 
   disable(resolver: {
@@ -67,7 +60,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
     return this;
   }
 
-  getValue(): FormModel.Value<S> {
+  getValue(): Model.Value<S> {
     return this.model2;
   }
 
@@ -89,7 +82,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
    * This method is used by the dynamic-form component
    * to emit the current state of the model after the model changed.
    */
-  _emitModel(model: FormModel.Value<S>) {
+  _emitModel(model: Model.Value<S>) {
     this.model2 = model;
     this.modelChangeSubject.next(model);
   }

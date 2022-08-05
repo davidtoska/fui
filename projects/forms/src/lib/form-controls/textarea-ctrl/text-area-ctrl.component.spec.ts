@@ -1,14 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { TextAreaCtrlComponent } from './text-area-ctrl.component';
+import { TextAreaCtrlComponent } from "./text-area-ctrl.component";
 
-describe('TextCtrlComponent', () => {
+describe("TextCtrlComponent", () => {
   let component: TextAreaCtrlComponent;
   let fixture: ComponentFixture<TextAreaCtrlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TextAreaCtrlComponent],
+      declarations: [TextAreaCtrlComponent]
     }).compileComponents();
   });
 
@@ -18,7 +18,7 @@ describe('TextCtrlComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

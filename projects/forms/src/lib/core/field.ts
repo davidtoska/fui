@@ -1,21 +1,19 @@
-import { LabeledValue } from "./labeled-value";
+import { LabeledValue } from "../types";
 
-export abstract class FieldConfigBase<OUT> {
-  __outputType!: OUT;
-  __optionalOutputType!: OUT | null;
-  initialValue: OUT | null = null;
+export abstract class FieldConfigBase<O> {
+  __outputType!: O;
+  __optionalOutputType!: O | null;
   hint: string = "";
   label: string = "";
   required: boolean = true;
-  readonly emptyValue = null;
-  readonly defaultValue: OUT | null;
+  defaultValue: O | null;
   placeholder = "";
 
-  protected constructor(defaultValue: OUT | null) {
+  protected constructor(defaultValue: O | null) {
     this.defaultValue = defaultValue;
-    this.initialValue = defaultValue;
+    // this.initialValue = defaultValue;
   }
-  abstract validate(value: unknown): value is OUT;
+  abstract validate(value: unknown): value is O;
 }
 
 export class TextConfig extends FieldConfigBase<string> {
@@ -91,7 +89,7 @@ export class SelectConfig<V> extends SelectConfigBase<V> {
   }
 }
 
-export class NumberMeta<V = number> extends FieldConfigBase<V> {
+export class NumberConfig<V> extends FieldConfigBase<V> {
   _min = 0;
   _max = 100;
 

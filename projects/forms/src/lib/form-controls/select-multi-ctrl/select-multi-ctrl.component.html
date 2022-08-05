@@ -7,9 +7,14 @@
   }
 </style>
 <mat-form-field>
-  <mat-label>{{ field.label }}</mat-label>
-  <mat-select [required]="field.required" [compareWith]="compareItems" [formControl]="formControl" multiple="true">
-    <mat-option *ngFor="let opt of field._options" [value]="opt">{{ opt.label }}</mat-option>
+  <mat-label>{{ fieldConfig.label }}</mat-label>
+  <mat-select
+    [required]="fieldConfig.required"
+    [compareWith]="compareItems"
+    [formControl]="formControl"
+    multiple="true"
+  >
+    <mat-option *ngFor="let opt of fieldConfig._options" [value]="opt">{{ opt.label }}</mat-option>
   </mat-select>
-  <mat-hint *ngIf="field.hint">{{ field.hint }} </mat-hint>
+  <mat-hint *ngIf="fieldConfig.hint">{{ fieldConfig.hint }} </mat-hint>
 </mat-form-field>

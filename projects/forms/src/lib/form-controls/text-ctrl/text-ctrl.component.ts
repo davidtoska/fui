@@ -25,7 +25,7 @@ export class TextCtrlComponent extends BaseCtrl<TextConfig> {
     if (typeof value === "string") {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this.field.defaultValue);
+      this.formControl.setValue(this.fieldConfig.defaultValue);
     }
   }
 

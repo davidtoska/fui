@@ -1,14 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SelectCtrlComponent } from './select-ctrl.component';
+import { SelectCtrlComponent } from "./select-ctrl.component";
 
-describe('TextCtrlComponent', () => {
+describe("TextCtrlComponent", () => {
   let component: SelectCtrlComponent;
   let fixture: ComponentFixture<SelectCtrlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SelectCtrlComponent],
+      declarations: [SelectCtrlComponent]
     }).compileComponents();
   });
 
@@ -18,7 +18,7 @@ describe('TextCtrlComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

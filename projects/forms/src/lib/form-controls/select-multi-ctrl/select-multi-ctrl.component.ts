@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BaseCtrl } from "../base.ctrl";
-import { Select, SelectMulti } from "../../core/field.builders";
-import { LabeledValue } from "../../core/labeled-value";
+import { LabeledValue } from "../../types";
 import { SelectMultiConfig } from "../../core/field";
 
 const isNil = (item: unknown): item is null | undefined => item === null || item === undefined;
@@ -14,14 +13,14 @@ const isNil = (item: unknown): item is null | undefined => item === null || item
 export class SelectMultiCtrlComponent extends BaseCtrl<SelectMultiConfig<any>> {
   getValue(): LabeledValue[] | null {
     const value = this.formControl.value;
-    return Array.isArray(value) ? value : this._field.defaultValue;
+    return Array.isArray(value) ? value : this._fieldConfig.defaultValue;
   }
 
   setValue(value: unknown): void {
     if (Array.isArray(value)) {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this._field.defaultValue);
+      this.formControl.setValue(this._fieldConfig.defaultValue);
     }
   }
   addValidators(field: SelectMultiConfig<any>): void {}
@@ -29,7 +28,7 @@ export class SelectMultiCtrlComponent extends BaseCtrl<SelectMultiConfig<any>> {
     super(new SelectMultiConfig([]));
   }
 
-  compareItems(item1: SelectMultiConfig<any>["__optionalOutputType"], item2: SelectMultiConfig<any>["initialValue"]) {
+  compareItems(item1: SelectMultiConfig<any>["__optionalOutputType"], item2: SelectMultiConfig<any>["defaultValue"]) {
     // console.log(item2);
     // console.log(item1);
     if (item1 === item2) {

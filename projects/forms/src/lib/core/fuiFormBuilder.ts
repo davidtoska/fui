@@ -1,7 +1,7 @@
 import { DialogForm, DialogFormImpl } from "../dialog/dialog-form";
 import { NumberField, Select, SelectMulti, TextAreaField, TextField } from "./field.builders";
 import { Form, FormImpl, FormSchema } from "./form";
-import { LabeledValue } from "./labeled-value";
+import { LabeledValue } from "../types";
 
 export namespace FuiFormBuilder {
   export const dialog = <T extends FormSchema>(schema: T) => new DialogFormImpl(schema) as DialogForm<T>;

@@ -7,17 +7,17 @@
   }
 </style>
 <mat-form-field>
-  <mat-label>{{ field.label }}</mat-label>
+  <mat-label>{{ fieldConfig.label }}</mat-label>
   <textarea
     type="text"
     autocomplete="off"
     matInput
     [formControl]="formControl"
-    [placeholder]="field.placeholder"
-    [rows]="field._rows"
-    [minlength]="field.minLength"
-    [maxLength]="field.maxLength"
-    [ngStyle]="{ resize: field.resizable ? 'horizontal' : 'none' }"
+    [placeholder]="fieldConfig.placeholder"
+    [rows]="fieldConfig._rows"
+    [minlength]="fieldConfig.minLength"
+    [maxLength]="fieldConfig.maxLength"
+    [ngStyle]="{ resize: fieldConfig.resizable ? 'horizontal' : 'none' }"
   ></textarea>
-  <mat-hint *ngIf="field.hint">{{ field.hint }} </mat-hint>
+  <mat-hint *ngIf="fieldConfig.hint">{{ fieldConfig.hint }} </mat-hint>
 </mat-form-field>

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BaseCtrl } from "../base.ctrl";
 // import { Select } from "../../core/field.builders";
-import { Validation } from "../../util/validation";
-import { LabeledValue } from "../../core/labeled-value";
+import { V } from "../../util/v";
+import { LabeledValue } from "../../types";
 import { SelectConfig } from "../../core/field";
 
 @Component({
@@ -13,16 +13,13 @@ import { SelectConfig } from "../../core/field";
 export class SelectCtrlComponent extends BaseCtrl<SelectConfig<any>> {
   getValue(): LabeledValue | null {
     const value = this.formControl.value;
-    return Validation.isLabeledValue(value) ? value : null;
+    return V.isLabeledValue(value) ? value : null;
   }
   setValue(value: unknown): void {
-    const key1: keyof LabeledValue = "label";
-    const key2: keyof LabeledValue = "value";
-
-    if (Validation.hasKey(value, key1) && Validation.hasKey(value, key2)) {
+    if (V.isLabeledValue(value)) {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this._field.defaultValue);
+      this.formControl.setValue(this._fieldConfig.defaultValue);
     }
   }
   constructor() {
@@ -34,10 +31,10 @@ export class SelectCtrlComponent extends BaseCtrl<SelectConfig<any>> {
       return true;
     }
 
-    if (Validation.isNil(item1) && typeof item2 === "object") {
+    if (V.isNil(item1) && typeof item2 === "object") {
       return false;
     }
-    if (Validation.isNil(item2) && typeof item1 === "object") {
+    if (V.isNil(item2) && typeof item1 === "object") {
       return false;
     }
 

@@ -1,5 +1,5 @@
-import { FieldConfigBase, NumberMeta, SelectConfig, SelectMultiConfig, TextAreaConfig, TextConfig } from "./field";
-import { LabeledValue } from "./labeled-value";
+import { FieldConfigBase, NumberConfig, SelectConfig, SelectMultiConfig, TextAreaConfig, TextConfig } from "./field";
+import { LabeledValue } from "../types";
 
 export abstract class FieldBuilderBase<OUT> {
   abstract readonly __config: FieldConfigBase<OUT>;
@@ -162,7 +162,7 @@ export class SelectMulti<V = LabeledValue[]> extends FieldBuilderBase<V> {
 }
 
 export class NumberField<V = number> extends FieldBuilderBase<V> {
-  __config: NumberMeta<V> = new NumberMeta<V>(null);
+  __config: NumberConfig<V> = new NumberConfig<V>(null);
 
   constructor() {
     super();
@@ -171,6 +171,11 @@ export class NumberField<V = number> extends FieldBuilderBase<V> {
   label(text: string) {
     this.__config.label = text;
     return this;
+  }
+
+  defaultValue(value: V) {
+    this.__config.defaultValue = value;
+    return this as any as NumberField<number>;
   }
 
   optional(): NumberField<number | null> {

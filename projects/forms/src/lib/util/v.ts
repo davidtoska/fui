@@ -1,16 +1,16 @@
-import { LabeledValue } from "../core/labeled-value";
+import { LabeledValue } from "../types";
 
-export namespace Validation {
+export namespace V {
   export const isLabeledValue = (value: unknown): value is LabeledValue => {
     const key1: keyof LabeledValue = "label";
     const key2: keyof LabeledValue = "value";
-    if (!Validation.hasKey(value, key1)) {
+    if (!V.hasKey(value, key1)) {
       return false;
     }
-    if (!Validation.hasKey(value, key2)) {
+    if (!V.hasKey(value, key2)) {
       return false;
     }
-    return Validation.isString(value.value) && Validation.isString(value.label);
+    return V.isString(value.value) && V.isString(value.label);
   };
 
   export const isString = (str: unknown, minLength = 0): str is string => {
@@ -31,7 +31,7 @@ export namespace Validation {
   export const isNil = (item: unknown): item is null | undefined => item === null || item === undefined;
 
   export const hasKey = <T extends string>(obj: unknown, key: T): obj is Record<typeof key, unknown> => {
-    if (!Validation.isRecord(obj)) {
+    if (!V.isRecord(obj)) {
       return false;
     }
     return Object.prototype.hasOwnProperty.call(obj, key);

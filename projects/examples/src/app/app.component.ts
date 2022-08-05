@@ -4,7 +4,8 @@ import { Component } from "@angular/core";
   selector: "app-root",
   template: `
     <mat-toolbar>
-      <button mat-button routerLink="form1">Form1</button>
+      <button mat-button routerLink="form1">Adress-form</button>
+      <button mat-button routerLink="dialog-forms">Dialog Forms</button>
     </mat-toolbar>
     <router-outlet></router-outlet>
   `,

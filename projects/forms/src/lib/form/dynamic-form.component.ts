@@ -17,11 +17,11 @@ import { NumberCtrlComponent } from "../form-controls/number-ctrl/number-ctrl.co
 import { TextAreaCtrlComponent } from "../form-controls/textarea-ctrl/text-area-ctrl.component";
 import { SelectCtrlComponent } from "../form-controls/select-ctrl/select-ctrl.component";
 import { SelectMultiCtrlComponent } from "../form-controls/select-multi-ctrl/select-multi-ctrl.component";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { BaseCtrl } from "../form-controls/base.ctrl";
 import { FieldBuilderBase, NumberField, Select, SelectMulti, TextAreaField, TextField } from "../core/field.builders";
-import { Validation } from "../util/validation";
-import { FormModel } from "../core/form-model";
+import { V } from "../util/v";
+import { Model } from "../core/model";
 import { FieldConfigBase } from "../core/field";
 
 const getComponent = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldConfigBase<any>>> => {
@@ -65,7 +65,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
 
   private formImpl?: FormImpl<FormSchema>;
 
-  private formGroup = new FormGroup({});
+  private formGroup = new UntypedFormGroup({});
 
   @Input()
   set formConfig(form: Form<FormSchema>) {
@@ -107,8 +107,8 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
     }, 0);
   }
 
-  private getCurrentModel(): FormModel.OptionalTypeOf<any> {
-    const model: FormModel.OptionalTypeOf<any> = {};
+  private getCurrentModel(): Model.TypeOfOptional<any> {
+    const model: Model.TypeOfOptional<any> = {};
     this.fieldRefs.forEach(field => {
       const key = field.key;
       // console.log(key + " [valid]: " + field.instance.formControl.valid);
@@ -129,9 +129,9 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
     const model = this.getCurrentModel();
     this.checkDisableFields();
     if (isValid) {
-      this.formImpl._emitModel(FormModel.valid(model));
+      this.formImpl._emitModel(Model.valid(model));
     } else {
-      this.formImpl._emitModel(FormModel.inValid(model));
+      this.formImpl._emitModel(Model.inValid(model));
     }
     this.valid = isValid;
 
@@ -156,7 +156,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
       const comp = getComponent(field);
       const componentRef = this.viewContainerRef.createComponent(comp);
       const instance = componentRef.instance;
-      instance.field = field.__config;
+      instance.fieldConfig = field.__config;
       const disable = disableCallbacks[key];
       this.formGroup.addControl(key, instance.formControl);
       this.fieldRefs.push({ key, componentRef, instance, disable });
@@ -165,7 +165,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
 
     // Set local modelChangeObservable
     const updateFormSubscription = formConfig.__updateFormSubject.subscribe(res => {
-      if (!Validation.isRecord(res)) {
+      if (!V.isRecord(res)) {
         return;
       }
       this.fieldRefs.forEach(ref => {

@@ -1,0 +1,31 @@
+<style>
+  :host {
+    width: 1200px;
+    margin: 0 auto;
+    display: block;
+  }
+  .example-form-container {
+    width: 300px;
+    margin: 20px;
+    display: inline-block;
+  }
+</style>
+<div class="example-form-container">
+  <fui-dynamic-form [formConfig]="personalDataForm" #formEl></fui-dynamic-form>
+  <button mat-button (click)="updatePersonalDataModel()">Update model</button>
+  <button mat-button [disabled]="!formEl.valid" (click)="onFormSubmit()">Submit</button>
+  <pre>{{ personalDataFormModel | json }}</pre>
+</div>
+
+<div class="example-form-container">
+  <h1>Change-detection not working here.</h1>
+  <fui-dynamic-form [formConfig]="disableForm" #form2></fui-dynamic-form>
+  <button mat-button [disabled]="!form2.valid" (click)="onFormSubmit()">Submit</button>
+  <pre>{{ disableFormModel | json }}</pre>
+</div>
+
+<div class="example-form-container">
+  <h1>Mulit-select</h1>
+  <fui-dynamic-form [formConfig]="multiSelect"></fui-dynamic-form>
+  <pre>{{ multiSelectModel | json }}</pre>
+</div>

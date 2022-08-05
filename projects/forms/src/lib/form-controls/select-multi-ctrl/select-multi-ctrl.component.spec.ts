@@ -1,14 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SelectMultiCtrlComponent } from './select-multi-ctrl.component';
+import { SelectMultiCtrlComponent } from "./select-multi-ctrl.component";
 
-describe('TextCtrlComponent', () => {
+describe("TextCtrlComponent", () => {
   let component: SelectMultiCtrlComponent;
   let fixture: ComponentFixture<SelectMultiCtrlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SelectMultiCtrlComponent],
+      declarations: [SelectMultiCtrlComponent]
     }).compileComponents();
   });
 
@@ -18,7 +18,7 @@ describe('TextCtrlComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
