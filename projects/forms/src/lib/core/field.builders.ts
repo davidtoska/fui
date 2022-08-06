@@ -3,9 +3,7 @@ import { LabeledValue } from "../types";
 
 export abstract class FieldBuilderBase<OUT> {
   abstract readonly __config: FieldConfigBase<OUT>;
-
   abstract label(text: string): FieldBuilderBase<OUT>;
-
   abstract hint(text: string): FieldBuilderBase<OUT>;
 }
 
@@ -204,12 +202,12 @@ export class NumberField<V = number> extends FieldBuilderBase<V> {
   }
 }
 
-export type AnyField =
-  | TextField
-  | NumberField
-  | NumberField<number | null>
-  | TextAreaField
-  | Select<LabeledValue>
-  | Select<LabeledValue | null>
-  | SelectMulti
-  | SelectMulti<LabeledValue[] | null>;
+// export type AnyField =
+//   | TextField
+//   | NumberField<number>
+//   | NumberField<number | null>
+//   | TextAreaField
+//   | Select<LabeledValue>
+//   | Select<LabeledValue | null>
+//   | SelectMulti
+//   | SelectMulti<LabeledValue[] | null>;

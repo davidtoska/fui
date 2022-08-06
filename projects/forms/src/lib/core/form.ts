@@ -24,7 +24,7 @@ export interface Form<S extends FormSchema> {
     [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] }) => boolean;
   }): Form<S>;
 
-  getValue(): Model.Valid<S> | Model.InValid<S>;
+  getModel(): Model.Valid<S> | Model.InValid<S>;
   modelChange$: Observable<Model.Value<S>>;
 }
 
@@ -38,7 +38,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
 
   readonly fields: S;
   // model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] };
-  model2: Model.Value<S>;
+  private model: Model.Value<S>;
   modelChange$ = this.modelChangeSubject.asObservable();
 
   constructor(fields: S) {
@@ -50,7 +50,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
     });
     const castedModel = model as Model.TypeOfOptional<S>;
     // TODO VALIDATE MODEL HERE!! Seems like config object is right place for validation-fn
-    this.model2 = Model.inValid(castedModel);
+    this.model = Model.inValid(castedModel);
   }
 
   disable(resolver: {
@@ -60,8 +60,8 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
     return this;
   }
 
-  getValue(): Model.Value<S> {
-    return this.model2;
+  getModel(): Model.Value<S> {
+    return this.model;
   }
 
   /**
@@ -83,7 +83,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
    * to emit the current state of the model after the model changed.
    */
   _emitModel(model: Model.Value<S>) {
-    this.model2 = model;
+    this.model = model;
     this.modelChangeSubject.next(model);
   }
 

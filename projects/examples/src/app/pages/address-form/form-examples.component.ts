@@ -7,11 +7,11 @@ import { disableForm, multiSelect, personalData } from "./forms";
 })
 export class FormExamplesComponent implements OnInit {
   personalDataForm = personalData;
-  personalDataFormModel = personalData.getValue();
+  personalDataFormModel = personalData.getModel();
   disableForm = disableForm;
-  disableFormModel = disableForm.getValue();
+  disableFormModel = disableForm.getModel();
   multiSelect = multiSelect;
-  multiSelectModel = multiSelect.getValue();
+  multiSelectModel = multiSelect.getModel();
   constructor() {}
 
   ngOnInit(): void {
@@ -19,7 +19,7 @@ export class FormExamplesComponent implements OnInit {
       this.personalDataFormModel = model;
       if (model.isValid) {
         const data = model.data;
-        console.log(data.lastName);
+        console.log(data.lang);
       } else {
         const data = model.data;
         console.log(data);
@@ -52,11 +52,11 @@ export class FormExamplesComponent implements OnInit {
   }
 
   onFormSubmit() {
-    console.log(this.personalDataForm.getValue());
+    console.log(this.personalDataForm.getModel());
   }
 
   updatePersonalDataModel() {
-    console.log(this.personalDataForm.getValue());
+    console.log(this.personalDataForm.getModel());
     this.personalDataForm.setModel({
       firstName: "david",
       lastName: "Toska",

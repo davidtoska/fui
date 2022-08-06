@@ -4,10 +4,12 @@ export const personalData = f.form({
   firstName: f.textField().label("Firstname").minLength(1).hint("Name needs to be at least 1 character long"),
   lastName: f.textField().label("Lastname"),
   age: f.numberField().label("Age").min(0).max(100),
-  lang: f.select([
-    { label: "Norwegian", value: "no" },
-    { label: "Sved", value: "se" }
-  ])
+  lang: f
+    .select([
+      { label: "Norwegian", value: "no" },
+      { label: "Sved", value: "se" }
+    ])
+    .optional()
 });
 
 export const disableForm = f

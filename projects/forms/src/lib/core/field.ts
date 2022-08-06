@@ -11,7 +11,6 @@ export abstract class FieldConfigBase<O> {
 
   protected constructor(defaultValue: O | null) {
     this.defaultValue = defaultValue;
-    // this.initialValue = defaultValue;
   }
   abstract validate(value: unknown): value is O;
 }

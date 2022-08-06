@@ -19,7 +19,7 @@ export interface DialogForm<T extends FormSchema> {
 }
 
 export class DialogFormImpl<T extends FormSchema> implements DialogForm<T> {
-  _metadata: {
+  _config: {
     headline: string;
     width: string;
     saveButtonText: string;
@@ -31,7 +31,7 @@ export class DialogFormImpl<T extends FormSchema> implements DialogForm<T> {
 
   constructor(schema: T) {
     this.form = new FormImpl<T>(schema);
-    this._metadata = {
+    this._config = {
       headline: "",
       width: "400px",
       saveButtonText: "Save",
@@ -41,23 +41,23 @@ export class DialogFormImpl<T extends FormSchema> implements DialogForm<T> {
   }
 
   headline(text: string) {
-    this._metadata.headline = text;
+    this._config.headline = text;
     return this;
   }
 
   width(px: number) {
-    this._metadata.width = px + "px";
+    this._config.width = px + "px";
     return this;
   }
 
   cancelButtonText(text: string) {
-    this._metadata.cancelButtonText = text;
+    this._config.cancelButtonText = text;
     return this;
   }
 
   saveButton(text: string, disableUntilModelChanged = false) {
-    this._metadata.saveButtonText = text;
-    this._metadata.disableSaveButtonUntilModelChanged = disableUntilModelChanged;
+    this._config.saveButtonText = text;
+    this._config.disableSaveButtonUntilModelChanged = disableUntilModelChanged;
     return this;
   }
 
@@ -75,7 +75,7 @@ export class DialogFormImpl<T extends FormSchema> implements DialogForm<T> {
     const clonedForm = this.form.clone();
     const newDialog = new DialogFormImpl(clonedForm.fields);
     // TODO clone metadata
-    newDialog._metadata = { ...this._metadata };
+    newDialog._config = { ...this._config };
     return newDialog;
   }
 }
