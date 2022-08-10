@@ -17,11 +17,11 @@ export interface Form<S extends FormSchema> {
    * @param model
    */
   setModel(model: {
-    [P in keyof S]: S[P]["__config"]["__optionalOutputType"];
+    [P in keyof S]: S[P]["__config"]["__optionalOutput"];
   }): Form<S>;
 
   disable(functions: {
-    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] }) => boolean;
+    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutput"] }) => boolean;
   }): Form<S>;
 
   getModel(): Model.Valid<S> | Model.InValid<S>;
@@ -33,7 +33,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
   __updateFormSubject = new ReplaySubject<Model.TypeOfOptional<S>>(1);
 
   private disableMap: {
-    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] }) => boolean;
+    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutput"] }) => boolean;
   } = {};
 
   readonly fields: S;
@@ -54,7 +54,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
   }
 
   disable(resolver: {
-    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] }) => boolean;
+    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutput"] }) => boolean;
   }) {
     this.disableMap = resolver;
     return this;
@@ -70,7 +70,7 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
    * @param model
    */
   setModel(model: {
-    [P in keyof S]: S[P]["__config"]["__outputType"];
+    [P in keyof S]: S[P]["__config"]["__output"];
   }) {
     this.__updateFormSubject.next(model);
     return this;
@@ -84,7 +84,10 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
    */
   _emitModel(model: Model.Value<S>) {
     this.model = model;
-    this.modelChangeSubject.next(model);
+    const clone = JSON.parse(JSON.stringify(model));
+    console.log(clone);
+
+    this.modelChangeSubject.next(clone);
   }
 
   _getDisabledCallbacks() {

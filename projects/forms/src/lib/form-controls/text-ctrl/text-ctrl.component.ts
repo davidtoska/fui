@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BaseCtrl } from "../base.ctrl";
-import { ValidatorFn, Validators } from "@angular/forms";
 import { TextConfig } from "../../core/field";
 
 @Component({
@@ -13,13 +12,7 @@ export class TextCtrlComponent extends BaseCtrl<TextConfig> {
     super(new TextConfig(""));
   }
 
-  addValidators(field: TextConfig) {
-    const validators: ValidatorFn[] = [];
-    if (field.required) {
-      validators.push(Validators.required);
-    }
-    this.formControl.addValidators(validators);
-  }
+  addValidators(field: TextConfig) {}
 
   setValue(value: unknown): void {
     if (typeof value === "string") {
@@ -29,8 +22,8 @@ export class TextCtrlComponent extends BaseCtrl<TextConfig> {
     }
   }
 
-  getValue(): TextConfig["__optionalOutputType"] {
+  getValue(): TextConfig["__optionalOutput"] {
     const value = this.formControl.value;
-    return typeof value === "string" ? value : "";
+    return typeof value === "string" ? value : this._fieldConfig.defaultValue;
   }
 }

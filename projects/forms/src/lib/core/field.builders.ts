@@ -1,25 +1,67 @@
-import { FieldConfigBase, NumberConfig, SelectConfig, SelectMultiConfig, TextAreaConfig, TextConfig } from "./field";
+import {
+  CheckBoxConfig,
+  FieldConfigBase,
+  NumberConfig,
+  SelectConfig,
+  SelectMultiConfig,
+  TextAreaConfig,
+  TextConfig
+} from "./field";
 import { LabeledValue } from "../types";
+import { ThemePalette } from "@angular/material/core";
 
-export abstract class FieldBuilderBase<OUT> {
-  abstract readonly __config: FieldConfigBase<OUT>;
-  abstract label(text: string): FieldBuilderBase<OUT>;
-  abstract hint(text: string): FieldBuilderBase<OUT>;
+export abstract class FieldBuilderBase<O> {
+  abstract readonly __config: FieldConfigBase<O>;
+  abstract label(text: string): FieldBuilderBase<O>;
+  abstract hint(text: string): FieldBuilderBase<O>;
 }
 
-abstract class TextFieldBase extends FieldBuilderBase<string> {
-  constructor() {
+export class CheckboxField<O> extends FieldBuilderBase<O> {
+  __config = new CheckBoxConfig<O>();
+  constructor(defaultValue: O) {
     super();
+    this.__config.defaultValue = defaultValue;
   }
-  abstract placeholder(text: string): TextFieldBase;
 
-  abstract minLength(length: number): TextFieldBase;
+  // TODO ADD hint in html
+  hint(text: string): CheckboxField<O> {
+    this.__config.hint = text;
+    return this;
+  }
 
-  abstract maxLength(max: number): TextFieldBase;
+  color(theme: ThemePalette) {
+    this.__config.color = theme;
+    return this;
+  }
+
+  label(text: string) {
+    this.__config.label = text;
+    return this;
+  }
+
+  labelPos(position: "before" | "after") {
+    this.__config.labelPos = position;
+    return this;
+  }
+
+  optional(): CheckboxField<boolean | null> {
+    this.__config.required = false;
+    return this as any as CheckboxField<boolean | null>;
+  }
+
+  defaultValue(value: O) {
+    this.__config.defaultValue = value;
+    return this;
+  }
+
+  // hint(text: string) {
+  //   this.__config.hint = text;
+  //   return this;
+  // }
 }
 
-export class TextField extends TextFieldBase {
-  __config = new TextConfig("");
+export class TextField<O = string> extends FieldBuilderBase<O> {
+  __config: TextConfig<O> = new TextConfig<O>(null);
 
   constructor() {
     super();
@@ -35,9 +77,9 @@ export class TextField extends TextFieldBase {
     return this;
   }
 
-  optional() {
+  optional(): TextField<O | null> {
     this.__config.required = false;
-    return this as TextField;
+    return this as TextField<O | null>;
   }
 
   hint(text: string) {
@@ -56,8 +98,8 @@ export class TextField extends TextFieldBase {
   }
 }
 
-export class TextAreaField extends TextFieldBase {
-  __config = new TextAreaConfig();
+export class TextAreaField<O = string> extends FieldBuilderBase<O> {
+  __config: TextAreaConfig<O> = new TextAreaConfig<O>();
 
   placeholder(text: string) {
     this.__config.placeholder = text;
@@ -99,14 +141,19 @@ export class TextAreaField extends TextFieldBase {
     this.__config.resizable = isResizable;
     return this;
   }
+
+  optional(): TextAreaField<null | string> {
+    this.__config.required = false;
+    return this as any as TextAreaField<null | string>;
+  }
 }
 
-export class Select<V> extends FieldBuilderBase<V> {
-  __config = new SelectConfig<V>();
+export class Select<O> extends FieldBuilderBase<O> {
+  __config: SelectConfig<O>;
 
   constructor(options: LabeledValue[]) {
     super();
-    this.__config._options = options;
+    this.__config = new SelectConfig<O>(options);
   }
 
   label(text: string) {
@@ -130,8 +177,8 @@ export class Select<V> extends FieldBuilderBase<V> {
   }
 }
 
-export class SelectMulti<V = LabeledValue[]> extends FieldBuilderBase<V> {
-  __config = new SelectMultiConfig<V>([]);
+export class SelectMulti<O> extends FieldBuilderBase<O> {
+  __config = new SelectMultiConfig<O>([]);
 
   constructor(options: ReadonlyArray<LabeledValue>) {
     super();
@@ -159,8 +206,8 @@ export class SelectMulti<V = LabeledValue[]> extends FieldBuilderBase<V> {
   }
 }
 
-export class NumberField<V = number> extends FieldBuilderBase<V> {
-  __config: NumberConfig<V> = new NumberConfig<V>(null);
+export class NumberField<O = number> extends FieldBuilderBase<O> {
+  __config: NumberConfig<O> = new NumberConfig<O>(null);
 
   constructor() {
     super();
@@ -171,8 +218,9 @@ export class NumberField<V = number> extends FieldBuilderBase<V> {
     return this;
   }
 
-  defaultValue(value: V) {
-    this.__config.defaultValue = value;
+  defaultValue(value: O) {
+    const casted = this as NumberField<O>;
+    casted.__config.defaultValue = value;
     return this as any as NumberField<number>;
   }
 

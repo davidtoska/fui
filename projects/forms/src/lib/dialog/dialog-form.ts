@@ -12,7 +12,7 @@ export interface DialogForm<T extends FormSchema> {
   saveButton(text: string, disableUntilModelChanged?: boolean): DialogForm<T>;
 
   setModel(model: {
-    [P in keyof T]: T[P]["__config"]["__optionalOutputType"];
+    [P in keyof T]: T[P]["__config"]["__optionalOutput"];
   }): DialogForm<T>;
 
   clone(): DialogForm<T>;
@@ -61,7 +61,7 @@ export class DialogFormImpl<T extends FormSchema> implements DialogForm<T> {
     return this;
   }
 
-  setModel(model: { [P in keyof T]: T[P]["__config"]["__outputType"] }) {
+  setModel(model: { [P in keyof T]: T[P]["__config"]["__output"] }) {
     this.form.__updateFormSubject.next(model);
     return this;
   }

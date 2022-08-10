@@ -23,12 +23,14 @@ export class SelectMultiCtrlComponent extends BaseCtrl<SelectMultiConfig<any>> {
       this.formControl.setValue(this._fieldConfig.defaultValue);
     }
   }
+
   addValidators(field: SelectMultiConfig<any>): void {}
+
   constructor() {
     super(new SelectMultiConfig([]));
   }
 
-  compareItems(item1: SelectMultiConfig<any>["__optionalOutputType"], item2: SelectMultiConfig<any>["defaultValue"]) {
+  compareItems(item1: SelectMultiConfig<any>["__optionalOutput"], item2: SelectMultiConfig<any>["defaultValue"]) {
     // console.log(item2);
     // console.log(item1);
     if (item1 === item2) {

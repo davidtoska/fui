@@ -1,0 +1,64 @@
+<style>
+  :host {
+    width: 1000px;
+    margin: 0 auto;
+    display: block;
+  }
+  .example-form-container {
+    width: 100%;
+    display: flex;
+    /*margin: 20px 20px 60px;*/
+    padding: 20px;
+    /*display: inline-block;*/
+  }
+  .example-form {
+    width: 50%;
+  }
+  .example-form-data {
+    width: 50%;
+    padding: 30px 0 0 80px;
+    /*background-color: red;*/
+  }
+  mat-divider {
+    margin: 20px 0 20px 0;
+  }
+</style>
+<h1>Personal data</h1>
+<div class="example-form-container">
+  <div class="example-form">
+    <fui-dynamic-form [formConfig]="personalDataForm" #formEl></fui-dynamic-form>
+    <button mat-button (click)="updatePersonalDataModel()">Update model</button>
+    <button mat-button [disabled]="!formEl.valid" (click)="onFormSubmit()">Submit</button>
+  </div>
+  <pre class="example-form-data">{{ personalDataFormModel | json }}</pre>
+</div>
+<mat-divider></mat-divider>
+<h1>Change-detection not working here.</h1>
+<div class="example-form-container">
+  <div class="example-form">
+    <fui-dynamic-form [formConfig]="disableForm" #form2></fui-dynamic-form>
+    <button mat-button [disabled]="!form2.valid" (click)="onFormSubmit()">Submit</button>
+  </div>
+  <pre class="example-form-data">{{ disableFormModel | json }}</pre>
+</div>
+
+<h1>Mulit-select</h1>
+<div class="example-form-container">
+  <div class="example-form">
+    <fui-dynamic-form [formConfig]="multiSelect"></fui-dynamic-form>
+  </div>
+  <pre class="example-form-data">{{ multiSelectModel | json }}</pre>
+</div>
+<h1>Optional properties</h1>
+<div class="example-form-container">
+  <div class="example-form">
+    <fui-dynamic-form [formConfig]="optional"></fui-dynamic-form>
+  </div>
+  <pre class="example-form-data">{{ optionalModel | json }}</pre>
+</div>
+<div class="example-form-container">
+  <div class="example-form">
+    <fui-dynamic-form [formConfig]="textArea"></fui-dynamic-form>
+  </div>
+  <pre class="example-form-data">{{ textAreaModel | json }}</pre>
+</div>

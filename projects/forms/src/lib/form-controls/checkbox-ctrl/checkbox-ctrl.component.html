@@ -1,0 +1,16 @@
+<style>
+  :host {
+    width: 100%;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+</style>
+<!--<mat-form-field>-->
+<mat-checkbox
+  [formControl]="formControl"
+  [required]="fieldConfig.required"
+  [color]="fieldConfig.color"
+  [labelPosition]="fieldConfig.labelPos"
+  >{{ fieldConfig.label }}</mat-checkbox
+>

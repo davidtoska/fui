@@ -36,23 +36,26 @@ export class DynamicDialogComponent implements OnInit, OnDestroy, AfterViewInit 
   // @ViewChild()
 
   @ViewChild("formFields", { read: ViewContainerRef })
-  public formFields!: ViewContainerRef;
+  public formFields?: ViewContainerRef;
+
   @ViewChild(DynamicFormComponent)
   private dynamicFormComponent?: DynamicFormComponent;
 
   get disableSaveButton(): boolean {
     console.log("DISABLE SAVE");
     const dynamicFormComponent = this.dynamicFormComponent;
-    if (dynamicFormComponent instanceof DynamicFormComponent) {
-      if (!dynamicFormComponent.valid) {
-        return true;
-      }
+    if (!(dynamicFormComponent instanceof DynamicFormComponent)) {
+      return true;
+    }
 
-      const modelHasNotChanged = !dynamicFormComponent.modelHasChanged;
-      const disableUntilChanged = this.ref.config._config.disableSaveButtonUntilModelChanged;
-      if (modelHasNotChanged && disableUntilChanged) {
-        return true;
-      }
+    if (!dynamicFormComponent.valid) {
+      return true;
+    }
+
+    const modelHasNotChanged = !dynamicFormComponent.modelHasChanged;
+    const disableUntilChanged = this.ref.config._config.disableSaveButtonUntilModelChanged;
+    if (modelHasNotChanged && disableUntilChanged) {
+      return true;
     }
     return false;
   }
@@ -64,11 +67,10 @@ export class DynamicDialogComponent implements OnInit, OnDestroy, AfterViewInit 
     this.saveButtonText = this.ref.config._config.saveButtonText;
     this.cancelButtonText = this.ref.config._config.cancelButtonText;
     const modelChangeSub = this.form.modelChange$.subscribe(model => {
-      console.log(model);
-
-      console.log(model);
-      console.log(model);
-      console.log(model);
+      // console.log(model);
+      // console.log(model);
+      // console.log(model);
+      // console.log(model);
     });
   }
 
@@ -84,11 +86,6 @@ export class DynamicDialogComponent implements OnInit, OnDestroy, AfterViewInit 
       }
       this.cd.detectChanges();
     });
-    console.log(this.dynamicFormComponent);
-    console.log(this.dynamicFormComponent);
-    console.log(this.dynamicFormComponent);
-
-    // const changeSub = this.form.
     this.subs.push(messageSub);
   }
 
@@ -112,7 +109,6 @@ export class DynamicDialogComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onSave() {
     const model = this.form.getModel();
-
     this.ref.save(model.data);
   }
 }

@@ -11,7 +11,7 @@ export type DialogMessage =
   | { readonly kind: "task-state"; readonly message: string };
 
 export class DialogFormRef<T extends FormSchema> {
-  private onSaveCallback = new Set<ModelCallback<{ [P in keyof T]: T[P]["__config"]["__outputType"] }>>();
+  private onSaveCallback = new Set<ModelCallback<{ [P in keyof T]: T[P]["__config"]["__output"] }>>();
 
   private readonly internalMessageSubject = new ReplaySubject<DialogMessage>(1);
   readonly _internalMessages$ = this.internalMessageSubject.asObservable();
@@ -55,13 +55,13 @@ export class DialogFormRef<T extends FormSchema> {
    * Emits the current model to dialog-form-ref.
    * @param model
    */
-  save(model: { [P in keyof T]: T[P]["__config"]["__outputType"] }) {
+  save(model: { [P in keyof T]: T[P]["__config"]["__output"] }) {
     this.onSaveCallback.forEach(cb => {
       cb(model);
     });
   }
 
-  onSaveButtonClicked(cb: ModelCallback<{ [P in keyof T]: T[P]["__config"]["__outputType"] }>) {
+  onSaveButtonClicked(cb: ModelCallback<{ [P in keyof T]: T[P]["__config"]["__output"] }>) {
     this.onSaveCallback.add(cb);
     return this;
   }

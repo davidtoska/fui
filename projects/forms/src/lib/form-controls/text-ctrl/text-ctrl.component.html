@@ -16,6 +16,7 @@
     [formControl]="formControl"
     [minlength]="fieldConfig.minLength"
     [maxLength]="fieldConfig.maxLength"
+    [required]="fieldConfig.required"
   />
   <mat-hint *ngIf="fieldConfig.hint">{{ fieldConfig.hint }} </mat-hint>
 </mat-form-field>

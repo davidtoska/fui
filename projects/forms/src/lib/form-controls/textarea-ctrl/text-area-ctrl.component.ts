@@ -15,11 +15,11 @@ export class TextAreaCtrlComponent extends BaseCtrl<TextAreaConfig> {
   }
 
   addValidators(field: TextAreaConfig) {
-    const validators: ValidatorFn[] = [];
-    if (field.required) {
-      validators.push(Validators.required);
-    }
-    this.formControl.addValidators(validators);
+    // const validators: ValidatorFn[] = [];
+    // if (field.required) {
+    //   validators.push(Validators.required);
+    // }
+    // this.formControl.addValidators(validators);
   }
 
   setValue(value: unknown): void {
@@ -30,8 +30,8 @@ export class TextAreaCtrlComponent extends BaseCtrl<TextAreaConfig> {
     }
   }
 
-  getValue(): TextAreaField["__config"]["__optionalOutputType"] {
+  getValue(): TextAreaField["__config"]["__optionalOutput"] {
     const value = this.formControl.value;
-    return typeof value === "string" ? value : "";
+    return typeof value === "string" ? value : this._fieldConfig.defaultValue;
   }
 }

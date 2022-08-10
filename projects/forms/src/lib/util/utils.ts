@@ -1,16 +1,16 @@
 import { LabeledValue } from "../types";
 
-export namespace V {
+export namespace Utils {
   export const isLabeledValue = (value: unknown): value is LabeledValue => {
     const key1: keyof LabeledValue = "label";
     const key2: keyof LabeledValue = "value";
-    if (!V.hasKey(value, key1)) {
+    if (!Utils.hasKey(value, key1)) {
       return false;
     }
-    if (!V.hasKey(value, key2)) {
+    if (!Utils.hasKey(value, key2)) {
       return false;
     }
-    return V.isString(value.value) && V.isString(value.label);
+    return Utils.isString(value.value) && Utils.isString(value.label);
   };
 
   export const isString = (str: unknown, minLength = 0): str is string => {
@@ -31,7 +31,7 @@ export namespace V {
   export const isNil = (item: unknown): item is null | undefined => item === null || item === undefined;
 
   export const hasKey = <T extends string>(obj: unknown, key: T): obj is Record<typeof key, unknown> => {
-    if (!V.isRecord(obj)) {
+    if (!Utils.isRecord(obj)) {
       return false;
     }
     return Object.prototype.hasOwnProperty.call(obj, key);

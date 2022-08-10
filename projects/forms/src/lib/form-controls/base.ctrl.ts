@@ -3,7 +3,14 @@ import { FormControl } from "@angular/forms";
 import { FieldConfigBase } from "../core/field";
 import { LabeledValue } from "../types";
 
-type FormControlValues = string | number | null | Array<LabeledValue> | ReadonlyArray<LabeledValue> | LabeledValue;
+type FormControlValues =
+  | string
+  | number
+  | null
+  | Array<LabeledValue>
+  | ReadonlyArray<LabeledValue>
+  | LabeledValue
+  | boolean;
 
 @Directive()
 export abstract class BaseCtrl<T extends FieldConfigBase<any>> implements OnInit, OnDestroy {
@@ -59,7 +66,7 @@ export abstract class BaseCtrl<T extends FieldConfigBase<any>> implements OnInit
    */
   abstract setValue(value: unknown): void;
 
-  abstract getValue(): T["__optionalOutputType"];
+  abstract getValue(): T["__optionalOutput"];
 
   ngOnDestroy(): void {}
 

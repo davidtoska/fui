@@ -26,20 +26,5 @@ export class NumberCtrlComponent extends BaseCtrl<NumberConfig<number | null>> {
     super(new NumberConfig(null));
   }
 
-  addValidators(field: NumberConfig<number>) {
-    const validators: ValidatorFn[] = [];
-    const min = field._min;
-    const max = field._max;
-    if (field.required) {
-      validators.push(Validators.required);
-    }
-    if (typeof min === "number") {
-      validators.push(Validators.min(min));
-    }
-
-    if (typeof max === "number") {
-      validators.push(Validators.max(max));
-    }
-    this.formControl.addValidators(validators);
-  }
+  addValidators(field: NumberConfig<number>) {}
 }

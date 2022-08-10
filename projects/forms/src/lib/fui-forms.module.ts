@@ -14,6 +14,8 @@ import { SelectCtrlComponent } from "./form-controls/select-ctrl/select-ctrl.com
 import { MatSelectModule } from "@angular/material/select";
 import { SelectMultiCtrlComponent } from "./form-controls/select-multi-ctrl/select-multi-ctrl.component";
 import { DynamicFormComponent } from "./form/dynamic-form.component";
+import { CheckboxCtrlComponent } from "./form-controls/checkbox-ctrl/checkbox-ctrl.component";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { DynamicFormComponent } from "./form/dynamic-form.component";
     TextCtrlComponent,
     TextAreaCtrlComponent,
     NumberCtrlComponent,
+    CheckboxCtrlComponent,
     SelectCtrlComponent,
     SelectMultiCtrlComponent,
     DynamicFormComponent
@@ -35,6 +38,7 @@ import { DynamicFormComponent } from "./form/dynamic-form.component";
     MatButtonModule,
     MatProgressBarModule,
     MatSelectModule,
+    MatCheckboxModule,
     ReactiveFormsModule
   ],
   exports: [DynamicFormComponent]

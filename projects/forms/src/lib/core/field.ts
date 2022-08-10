@@ -1,8 +1,9 @@
 import { LabeledValue } from "../types";
+import { ThemePalette } from "@angular/material/core";
 
 export abstract class FieldConfigBase<O> {
-  __outputType!: O;
-  __optionalOutputType!: O | null;
+  __output!: O;
+  __optionalOutput!: O | null;
   hint: string = "";
   label: string = "";
   required: boolean = true;
@@ -12,92 +13,66 @@ export abstract class FieldConfigBase<O> {
   protected constructor(defaultValue: O | null) {
     this.defaultValue = defaultValue;
   }
-  abstract validate(value: unknown): value is O;
 }
 
-export class TextConfig extends FieldConfigBase<string> {
+export class CheckBoxConfig<O = boolean> extends FieldConfigBase<O> {
+  color: ThemePalette = "primary";
+  labelPos: "before" | "after" = "after";
+  constructor() {
+    super(null);
+  }
+}
+
+export class TextConfig<O = string> extends FieldConfigBase<O> {
   minLength = 0;
   maxLength = 10000;
 
-  constructor(defaultValue: "") {
+  constructor(defaultValue: O | null) {
     super(defaultValue);
   }
-
-  validate(value: unknown): value is string {
-    if (typeof value !== "string") {
-      return false;
-    }
-    if (value.length < this.minLength) {
-      return false;
-    }
-    if (value.length > this.minLength) {
-      return false;
-    }
-    return true;
-  }
 }
 
-export class TextAreaConfig extends TextConfig {
+export class TextAreaConfig<O = string> extends FieldConfigBase<O> {
   resizable = false;
   _rows = 3;
-
+  minLength = 0;
+  maxLength = 10000;
   constructor() {
-    super("");
-  }
-}
-
-abstract class SelectConfigBase<V> extends FieldConfigBase<V> {
-  _options: LabeledValue[];
-
-  protected constructor(options: LabeledValue[]) {
     super(null);
-    this._options = options;
   }
 }
 
-export class SelectMultiConfig<V> extends FieldConfigBase<V> {
+// abstract class SelectConfigBase<O> extends FieldConfigBase<O> {
+//   _options: LabeledValue[];
+//
+//   protected constructor(options: LabeledValue[]) {
+//     super(null);
+//     this._options = options;
+//   }
+// }
+
+export class SelectMultiConfig<O> extends FieldConfigBase<O> {
   _options: LabeledValue[];
 
   constructor(options: LabeledValue[]) {
     super(null);
     this._options = options;
   }
-
-  /**
-   *
-   * @param value
-   */
-  validate(value: unknown): value is V {
-    const isArray = Array.isArray(value);
-
-    // TODO
-    return !this.required;
-  }
 }
 
-export class SelectConfig<V> extends SelectConfigBase<V> {
-  constructor() {
-    super([]);
+export class SelectConfig<O> extends FieldConfigBase<O> {
+  _options: LabeledValue[];
+  constructor(options: LabeledValue[]) {
+    super(null);
+    this._options = options;
     this.required = true;
   }
-  validate(value: unknown): value is V {
-    const isArray = Array.isArray(value);
-
-    // TODO
-    return !this.required;
-  }
 }
-
-export class NumberConfig<V> extends FieldConfigBase<V> {
+export class NumberConfig<O> extends FieldConfigBase<O> {
   _min = 0;
   _max = 100;
 
-  constructor(defaultValue: V | null) {
+  constructor(defaultValue: O | null) {
     super(defaultValue);
-  }
-
-  override validate(value: unknown): value is V {
-    // TODO
-    return typeof value === "number";
   }
 }

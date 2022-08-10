@@ -17,14 +17,23 @@ import { NumberCtrlComponent } from "../form-controls/number-ctrl/number-ctrl.co
 import { TextAreaCtrlComponent } from "../form-controls/textarea-ctrl/text-area-ctrl.component";
 import { SelectCtrlComponent } from "../form-controls/select-ctrl/select-ctrl.component";
 import { SelectMultiCtrlComponent } from "../form-controls/select-multi-ctrl/select-multi-ctrl.component";
-import { UntypedFormGroup } from "@angular/forms";
+import { FormGroup } from "@angular/forms";
 import { BaseCtrl } from "../form-controls/base.ctrl";
-import { FieldBuilderBase, NumberField, Select, SelectMulti, TextAreaField, TextField } from "../core/field.builders";
-import { V } from "../util/v";
+import {
+  CheckboxField,
+  FieldBuilderBase,
+  NumberField,
+  Select,
+  SelectMulti,
+  TextAreaField,
+  TextField
+} from "../core/field.builders";
+import { Utils } from "../util/utils";
 import { Model } from "../core/model";
 import { FieldConfigBase } from "../core/field";
+import { CheckboxCtrlComponent } from "../form-controls/checkbox-ctrl/checkbox-ctrl.component";
 
-const getComponent = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldConfigBase<any>>> => {
+const getComponentOrThrow = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldConfigBase<any>>> => {
   if (field instanceof TextField) {
     return TextCtrlComponent;
   }
@@ -42,6 +51,9 @@ const getComponent = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldConfigBa
   if (field instanceof SelectMulti) {
     return SelectMultiCtrlComponent;
   }
+  if (field instanceof CheckboxField) {
+    return CheckboxCtrlComponent;
+  }
   throw new Error("Could not find a component to given field-config");
 };
 
@@ -52,10 +64,11 @@ const getComponent = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldConfigBa
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DynamicFormComponent implements AfterViewInit, OnDestroy {
+  private readonly TAG = "[DYNAMIC_FORM_COMPONENT]";
   private readonly configSubject = new ReplaySubject<FormImpl<FormSchema>>(1);
   private subs: Subscription[] = [];
   private formInstanceSubs: Subscription[] = [];
-  private fieldRefs: FieldCompoentRef[] = [];
+  private fieldRefs: FieldComponentRef[] = [];
 
   @ViewChild("formFields", { read: ViewContainerRef, static: true })
   public viewContainerRef!: ViewContainerRef;
@@ -65,7 +78,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
 
   private formImpl?: FormImpl<FormSchema>;
 
-  private formGroup = new UntypedFormGroup({});
+  private formGroup = new FormGroup({});
 
   @Input()
   set formConfig(form: Form<FormSchema>) {
@@ -104,7 +117,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
 
     setTimeout(() => {
       this.valid = this.formGroup.valid;
-    }, 0);
+    }, 10);
   }
 
   private getCurrentModel(): Model.TypeOfOptional<any> {
@@ -134,7 +147,6 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
       this.formImpl._emitModel(Model.inValid(model));
     }
     this.valid = isValid;
-
     this.cd.detectChanges();
   }
 
@@ -153,7 +165,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
     const fieldEntries = Object.entries(formConfig.fields);
 
     fieldEntries.forEach(([key, field]) => {
-      const comp = getComponent(field);
+      const comp = getComponentOrThrow(field);
       const componentRef = this.viewContainerRef.createComponent(comp);
       const instance = componentRef.instance;
       instance.fieldConfig = field.__config;
@@ -165,7 +177,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
 
     // Set local modelChangeObservable
     const updateFormSubscription = formConfig.__updateFormSubject.subscribe(res => {
-      if (!V.isRecord(res)) {
+      if (!Utils.isRecord(res)) {
         return;
       }
       this.fieldRefs.forEach(ref => {
@@ -202,7 +214,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
   }
 }
 
-interface FieldCompoentRef {
+interface FieldComponentRef {
   readonly key: string;
   readonly componentRef: ComponentRef<BaseCtrl<FieldConfigBase<any>>>;
   readonly instance: BaseCtrl<FieldConfigBase<any>>;

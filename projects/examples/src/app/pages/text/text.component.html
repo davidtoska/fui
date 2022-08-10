@@ -1,0 +1,32 @@
+<p>text works!</p>
+<style>
+  :host {
+    width: 100%;
+  }
+  input {
+    display: block;
+  }
+  mat-form-field {
+    display: block;
+    width: 200px;
+  }
+</style>
+<mat-form-field>
+  <mat-label>Border color</mat-label>
+  <input matInput type="color" [(ngModel)]="borderColor" (ngModelChange)="onColorChange($event)" required />
+</mat-form-field>
+<input matInput type="color" [(ngModel)]="textColor" (ngModelChange)="onTextColorChange($event)" required />
+<mat-form-field>
+  <input matInput type="month" [(ngModel)]="month" (ngModelChange)="onMonthChange($event)" />
+</mat-form-field>
+<mat-form-field>
+  <input matInput type="email" />
+</mat-form-field>
+<mat-form-field>
+  <mat-label>Search</mat-label>
+  <input matInput type="search" placeholder="search" />
+</mat-form-field>
+<!--<input matInput type="password" />-->
+<!--<input matInput type="tel" />-->
+<!--<input matInput type="week" />-->
+<!--<input matInput type="time" [(ngModel)]="time" (ngModelChange)="onTimeChange($event)" />-->
