@@ -8,7 +8,7 @@
     "strict": true,
     "noImplicitOverride": true,
     "paths": {
-      "forms": ["dist/forms/forms", "dist/forms"],
+//      "forms": ["dist/forms/forms", "dist/forms"],
       "@fui/forms": ["projects/forms/src/public-api"]
     },
     "noPropertyAccessFromIndexSignature": true,

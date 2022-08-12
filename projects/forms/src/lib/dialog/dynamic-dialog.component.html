@@ -16,7 +16,12 @@
   <div class="action-bar">
     <span class="spacer"></span>
     <button mat-button (click)="onCancel()">{{ cancelButtonText }}</button>
-    <button mat-raised-button (click)="onSave()" color="primary" [disabled]="disableSaveButton">
+    <button
+      mat-raised-button
+      (click)="onSave()"
+      color="primary"
+      [disabled]="disableSaveButton"
+    >
       {{ saveButtonText }}
     </button>
   </div>

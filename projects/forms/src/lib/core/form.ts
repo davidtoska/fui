@@ -21,9 +21,12 @@ export interface Form<S extends FormSchema> {
   }): Form<S>;
 
   disable(functions: {
-    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutput"] }) => boolean;
+    [P in keyof S]?: (model: {
+      [P in keyof S]: S[P]["__config"]["__optionalOutput"];
+    }) => boolean;
   }): Form<S>;
 
+  showDebug(): Form<S>;
   getModel(): Model.Valid<S> | Model.InValid<S>;
   modelChange$: Observable<Model.Value<S>>;
 }
@@ -33,13 +36,16 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
   __updateFormSubject = new ReplaySubject<Model.TypeOfOptional<S>>(1);
 
   private disableMap: {
-    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutput"] }) => boolean;
+    [P in keyof S]?: (model: {
+      [P in keyof S]: S[P]["__config"]["__optionalOutput"];
+    }) => boolean;
   } = {};
 
   readonly fields: S;
   // model: { [P in keyof S]: S[P]["__config"]["__optionalOutputType"] };
   private model: Model.Value<S>;
   modelChange$ = this.modelChangeSubject.asObservable();
+  showDebugger: boolean = false;
 
   constructor(fields: S) {
     this.fields = fields;
@@ -52,9 +58,15 @@ export class FormImpl<S extends FormSchema> implements Form<S> {
     // TODO VALIDATE MODEL HERE!! Seems like config object is right place for validation-fn
     this.model = Model.inValid(castedModel);
   }
+  showDebug(): Form<S> {
+    this.showDebugger = true;
+    return this as Form<S>;
+  }
 
   disable(resolver: {
-    [P in keyof S]?: (model: { [P in keyof S]: S[P]["__config"]["__optionalOutput"] }) => boolean;
+    [P in keyof S]?: (model: {
+      [P in keyof S]: S[P]["__config"]["__optionalOutput"];
+    }) => boolean;
   }) {
     this.disableMap = resolver;
     return this;

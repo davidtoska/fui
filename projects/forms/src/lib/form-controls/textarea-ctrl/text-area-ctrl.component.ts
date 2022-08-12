@@ -26,12 +26,12 @@ export class TextAreaCtrlComponent extends BaseCtrl<TextAreaConfig> {
     if (typeof value === "string") {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this._fieldConfig.defaultValue);
+      this.formControl.setValue(this.fieldConfig.defaultValue);
     }
   }
 
   getValue(): TextAreaField["__config"]["__optionalOutput"] {
     const value = this.formControl.value;
-    return typeof value === "string" ? value : this._fieldConfig.defaultValue;
+    return typeof value === "string" ? value : this.fieldConfig.defaultValue;
   }
 }

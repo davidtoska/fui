@@ -1,14 +1,18 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BaseCtrl } from "../base.ctrl";
 import { ValidatorFn, Validators } from "@angular/forms";
-import { CheckBoxConfig, NumberConfig } from "../../core/field";
+import {
+  CheckBoxConfig,
+  NumberConfig,
+  SlideToggleConfig
+} from "../../core/field";
 
 @Component({
-  templateUrl: "./checkbox-ctrl.component.html",
-  styleUrls: ["./checkbox-ctrl.component.scss"],
+  templateUrl: "./slide-toggle-ctrl.component.html",
+  styleUrls: ["./slide-toggle-ctrl.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckboxCtrlComponent extends BaseCtrl<CheckBoxConfig<boolean>> {
+export class SlideToggleCtrlComponent extends BaseCtrl<SlideToggleConfig> {
   getValue(): boolean | null {
     const value = this.formControl.value;
     return typeof value === "boolean" ? value : this.fieldConfig.defaultValue;
@@ -21,9 +25,10 @@ export class CheckboxCtrlComponent extends BaseCtrl<CheckBoxConfig<boolean>> {
       this.formControl.setValue(this.fieldConfig.defaultValue);
     }
   }
+
   constructor() {
-    super(new CheckBoxConfig<boolean>());
+    super(new SlideToggleConfig(false));
   }
 
-  addValidators(field: CheckBoxConfig<boolean>) {}
+  addValidators(field: SlideToggleConfig) {}
 }

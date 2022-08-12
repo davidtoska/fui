@@ -3,7 +3,9 @@ import { FormSchema } from "./form";
 export namespace Model {
   export class Valid<S extends FormSchema> {
     readonly isValid: true = true;
-    constructor(readonly data: { [P in keyof S]: S[P]["__config"]["__output"] }) {}
+    constructor(
+      readonly data: { [P in keyof S]: S[P]["__config"]["__output"] }
+    ) {}
   }
 
   export type TypeOf<S extends FormSchema> = {

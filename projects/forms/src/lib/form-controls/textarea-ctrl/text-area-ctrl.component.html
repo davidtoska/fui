@@ -17,7 +17,7 @@
     [rows]="fieldConfig._rows"
     [minlength]="fieldConfig.minLength"
     [maxLength]="fieldConfig.maxLength"
-    [required]="_fieldConfig.required"
+    [required]="fieldConfig.required"
     [ngStyle]="{ resize: fieldConfig.resizable ? 'veritcal' : 'none' }"
   ></textarea>
   <mat-hint *ngIf="fieldConfig.hint">{{ fieldConfig.hint }} </mat-hint>

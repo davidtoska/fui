@@ -15,9 +15,39 @@ export abstract class FieldConfigBase<O> {
   }
 }
 
-export class CheckBoxConfig<O = boolean> extends FieldConfigBase<O> {
-  color: ThemePalette = "primary";
+export class ColorConfig<O = string> extends FieldConfigBase<O> {
+  radius = 50;
+  labelPos: "before" | "after" | "above" | "below" = "after";
+  constructor() {
+    super(null);
+  }
+}
+
+export class RadioConfig<O = LabeledValue> extends FieldConfigBase<O> {
+  theme: ThemePalette = "primary";
   labelPos: "before" | "after" = "after";
+  direction: "row" | "column" = "row";
+
+  _options: LabeledValue[] = [];
+  constructor(options: LabeledValue[]) {
+    super(null);
+    this._options = options;
+  }
+}
+
+export class SlideToggleConfig<O = boolean> extends FieldConfigBase<O> {
+  theme: ThemePalette = "primary";
+  labelPos: "before" | "after" = "after";
+  constructor(defaultValue: O) {
+    super(defaultValue);
+    this.required = false;
+  }
+}
+
+export class CheckBoxConfig<O = boolean> extends FieldConfigBase<O> {
+  themePalette: ThemePalette = "primary";
+  labelPos: "before" | "after" = "after";
+  indeterminate: boolean = false;
   constructor() {
     super(null);
   }

@@ -13,12 +13,14 @@ type FormControlValues =
   | boolean;
 
 @Directive()
-export abstract class BaseCtrl<T extends FieldConfigBase<any>> implements OnInit, OnDestroy {
+export abstract class BaseCtrl<T extends FieldConfigBase<any>>
+  implements OnInit, OnDestroy
+{
   /**
    * Configuration object for this form-control
    * @protected
    */
-  protected _fieldConfig: T;
+  private _fieldConfig: T;
 
   readonly formControl = new FormControl<FormControlValues>(null);
 
@@ -51,6 +53,7 @@ export abstract class BaseCtrl<T extends FieldConfigBase<any>> implements OnInit
 
   set fieldConfig(field: T) {
     this._fieldConfig = field;
+    console.log(field);
     // TODO check width property, and calculate rows here?? No css in styles!
     this.formControl.patchValue(field.defaultValue, {
       emitEvent: true

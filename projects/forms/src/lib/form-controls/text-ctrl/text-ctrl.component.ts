@@ -24,6 +24,6 @@ export class TextCtrlComponent extends BaseCtrl<TextConfig> {
 
   getValue(): TextConfig["__optionalOutput"] {
     const value = this.formControl.value;
-    return typeof value === "string" ? value : this._fieldConfig.defaultValue;
+    return typeof value === "string" ? value : this.fieldConfig.defaultValue;
   }
 }

@@ -11,7 +11,7 @@ import {
   ViewContainerRef
 } from "@angular/core";
 import { Form, FormImpl, FormSchema } from "../core/form";
-import { ReplaySubject, Subscription } from "rxjs";
+import { BehaviorSubject, ReplaySubject, Subscription } from "rxjs";
 import { TextCtrlComponent } from "../form-controls/text-ctrl/text-ctrl.component";
 import { NumberCtrlComponent } from "../form-controls/number-ctrl/number-ctrl.component";
 import { TextAreaCtrlComponent } from "../form-controls/textarea-ctrl/text-area-ctrl.component";
@@ -21,19 +21,27 @@ import { FormGroup } from "@angular/forms";
 import { BaseCtrl } from "../form-controls/base.ctrl";
 import {
   CheckboxField,
+  ColorField,
   FieldBuilderBase,
   NumberField,
   Select,
+  RadioField,
   SelectMulti,
   TextAreaField,
-  TextField
+  TextField,
+  SlideToggleField
 } from "../core/field.builders";
 import { Utils } from "../util/utils";
 import { Model } from "../core/model";
 import { FieldConfigBase } from "../core/field";
 import { CheckboxCtrlComponent } from "../form-controls/checkbox-ctrl/checkbox-ctrl.component";
+import { ColorCtrlComponent } from "../form-controls/color-ctrl/color-ctrl.component";
+import { RadioCtrlComponent } from "../form-controls/radio-ctrl/radio-ctrl.component";
+import { SlideToggleCtrlComponent } from "../form-controls/slide-toggle-ctrl/slide-toggle-ctrl.component";
 
-const getComponentOrThrow = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldConfigBase<any>>> => {
+const getComponentOrThrow = (
+  field: FieldBuilderBase<any>
+): Type<BaseCtrl<FieldConfigBase<any>>> => {
   if (field instanceof TextField) {
     return TextCtrlComponent;
   }
@@ -54,6 +62,15 @@ const getComponentOrThrow = (field: FieldBuilderBase<any>): Type<BaseCtrl<FieldC
   if (field instanceof CheckboxField) {
     return CheckboxCtrlComponent;
   }
+  if (field instanceof ColorField) {
+    return ColorCtrlComponent;
+  }
+  if (field instanceof RadioField) {
+    return RadioCtrlComponent;
+  }
+  if (field instanceof SlideToggleField) {
+    return SlideToggleCtrlComponent;
+  }
   throw new Error("Could not find a component to given field-config");
 };
 
@@ -69,6 +86,8 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
   private subs: Subscription[] = [];
   private formInstanceSubs: Subscription[] = [];
   private fieldRefs: FieldComponentRef[] = [];
+  currentDebugModel: Record<string, any> = {};
+  showDebugger = false;
 
   @ViewChild("formFields", { read: ViewContainerRef, static: true })
   public viewContainerRef!: ViewContainerRef;
@@ -76,7 +95,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
   valid = true;
   modelHasChanged = false;
 
-  private formImpl?: FormImpl<FormSchema>;
+  formImpl?: FormImpl<FormSchema>;
 
   private formGroup = new FormGroup({});
 
@@ -85,6 +104,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
     if (form instanceof FormImpl) {
       this.clearForm();
       this.formImpl = form;
+      this.showDebugger = form.showDebugger;
       this.configSubject.next(form);
     }
   }
@@ -94,6 +114,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
       item.unsubscribe();
     });
     this.fieldRefs = [];
+    this.showDebugger = false;
     this.modelHasChanged = false;
     if (this.viewContainerRef) {
       this.viewContainerRef.clear();
@@ -122,13 +143,26 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
 
   private getCurrentModel(): Model.TypeOfOptional<any> {
     const model: Model.TypeOfOptional<any> = {};
+
+    return model;
+  }
+
+  private getCurrentModel2(): Model.Valid<any> | Model.InValid<any> {
+    const model: Model.TypeOfOptional<any> = {};
     this.fieldRefs.forEach(field => {
       const key = field.key;
       // console.log(key + " [valid]: " + field.instance.formControl.valid);
       const value = field.instance.getValue();
       model[key] = value;
     });
-    return model;
+    // const model = this.getCurrentModel();
+    // TODO ADD VALIDATION TO COMPONENTS
+    const isValid = this.formGroup.valid;
+    if (isValid) {
+      return Model.valid(model);
+    } else {
+      return Model.inValid(model);
+    }
   }
 
   private handleFormValueChanges() {
@@ -138,6 +172,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
     console.log("HANDEL FORM CHANGES");
     this.modelHasChanged = true;
 
+    // TODO DONT RELY ON FORMGROUP VALIDATION!!
     const isValid = this.formGroup.valid;
     const model = this.getCurrentModel();
     this.checkDisableFields();
@@ -147,6 +182,7 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
       this.formImpl._emitModel(Model.inValid(model));
     }
     this.valid = isValid;
+    this.currentDebugModel = this.getCurrentModel2();
     this.cd.detectChanges();
   }
 
@@ -176,19 +212,22 @@ export class DynamicFormComponent implements AfterViewInit, OnDestroy {
     this.checkDisableFields();
 
     // Set local modelChangeObservable
-    const updateFormSubscription = formConfig.__updateFormSubject.subscribe(res => {
-      if (!Utils.isRecord(res)) {
-        return;
-      }
-      this.fieldRefs.forEach(ref => {
-        if (ref.key in res) {
-          const newValue = res[ref.key];
-          ref.instance.setValue(newValue);
+    const updateFormSubscription = formConfig.__updateFormSubject.subscribe(
+      res => {
+        if (!Utils.isRecord(res)) {
+          return;
         }
-      });
-      this.cd.detectChanges();
-    });
+        this.fieldRefs.forEach(ref => {
+          if (ref.key in res) {
+            const newValue = res[ref.key];
+            ref.instance.setValue(newValue);
+          }
+        });
+        this.cd.detectChanges();
+      }
+    );
     this.formInstanceSubs.push(updateFormSubscription);
+    this.currentDebugModel = this.getCurrentModel2();
     this.cd.detectChanges();
   }
 

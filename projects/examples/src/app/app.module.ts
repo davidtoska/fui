@@ -22,7 +22,8 @@ import { AutoCompleteComponent } from "./pages/auto-complete/auto-complete.compo
 import { DateComponent } from "./pages/date/date.component";
 import { MatInputModule } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
-import { ColorComponent } from './pages/color/color.component';
+import { ColorComponent } from "./pages/color/color.component";
+import { GridComponent } from './pages/grid/grid.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ColorComponent } from './pages/color/color.component';
     NumberComponent,
     AutoCompleteComponent,
     DateComponent,
-    ColorComponent
+    ColorComponent,
+    GridComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +52,8 @@ import { ColorComponent } from './pages/color/color.component';
     MatButtonModule,
     MatDividerModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    FuiFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,9 +1,13 @@
 import { FuiFormBuilder as f } from "@fui/forms";
 
 export const personalData = f.form({
-  firstName: f.textField().label("Firstname").minLength(1).hint("Name needs to be at least 1 character long"),
-  lastName: f.textField().label("Lastname"),
-  age: f.numberField().label("Age").min(0).max(100),
+  firstName: f
+    .text()
+    .label("Firstname")
+    .minLength(1)
+    .hint("Name needs to be at least 1 character long"),
+  lastName: f.text().label("Lastname"),
+  age: f.number().label("Age").min(0).max(100),
   lang: f
     .select([
       { label: "Norwegian", value: "no" },
@@ -15,14 +19,18 @@ export const personalData = f.form({
 export const disableForm = f
   .form({
     checkbox1: f.checkbox().label("Label"),
-    checkbox2: f.checkbox().label("Warn").color("warn").defaultValue(true),
-    checkbox3: f.checkbox().label("BeforePos").labelPos("before").defaultValue(true),
+    checkbox2: f.checkbox().label("Warn").theme("warn").defaultValue(true),
+    checkbox3: f
+      .checkbox()
+      .label("BeforePos")
+      .labelPos("before")
+      .defaultValue(true),
 
     disable: f.select([
       { label: "disable", value: "disable" },
       { label: "enable", value: "enable" }
     ]),
-    name: f.textField().label("Name").hint("Disable with select above")
+    name: f.text().label("Name").hint("Disable with select above")
   })
   .disable({
     name: model => {
@@ -43,8 +51,8 @@ const colorOptions: { label: string; value: string }[] = [
   { label: "Orange", value: "orange" }
 ];
 export const optionalForm = f.form({
-  text: f.textField().label("Text"),
-  textOptional: f.textField().label("TextOptional").optional(),
+  text: f.text().label("Text"),
+  textOptional: f.text().label("TextOptional").optional(),
   textArea: f.textArea().label("TextArea"),
   textAreaOptional: f.textArea().label("TextAreaOptional").optional(),
   select: f.select([...colorOptions]).label("Select"),
@@ -57,8 +65,8 @@ export const optionalForm = f.form({
     .label("SelectMultiOptional")
     .optional(),
   selectMulti: f.selectMulti([...colorOptions]).label("SelectMulti"),
-  number: f.numberField().label("Number"),
-  numberOptional: f.numberField().label("NumberOptional").optional()
+  number: f.number().label("Number"),
+  numberOptional: f.number().label("NumberOptional").optional()
 });
 
 export const textArea = f.form({

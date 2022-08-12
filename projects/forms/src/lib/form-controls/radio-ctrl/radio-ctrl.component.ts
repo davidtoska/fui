@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BaseCtrl } from "../base.ctrl";
 import { Utils } from "../../util/utils";
 import { LabeledValue } from "../../types";
-import { SelectConfig } from "../../core/field";
+import { RadioConfig } from "../../core/field";
 
 @Component({
-  templateUrl: "./select-ctrl.component.html",
-  styleUrls: ["./select-ctrl.component.scss"],
+  templateUrl: "./radio-ctrl.component.html",
+  styleUrls: ["./radio-ctrl.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectCtrlComponent extends BaseCtrl<SelectConfig<any>> {
+export class RadioCtrlComponent extends BaseCtrl<RadioConfig<any>> {
   getValue(): LabeledValue | null {
     const value = this.formControl.value;
     return Utils.isLabeledValue(value) ? value : null;
@@ -23,14 +23,14 @@ export class SelectCtrlComponent extends BaseCtrl<SelectConfig<any>> {
     }
   }
   constructor() {
-    super(new SelectConfig([]));
+    super(new RadioConfig<any>([]));
   }
 
-  addValidators(field: SelectConfig<any>): void {}
+  addValidators(field: RadioConfig<any>): void {}
 
   compareItems(
-    item1: SelectConfig<any>["__optionalOutput"],
-    item2: SelectConfig<any>["__optionalOutput"]
+    item1: RadioConfig<any>["__optionalOutput"],
+    item2: RadioConfig<any>["__optionalOutput"]
   ) {
     if (item1 === item2) {
       return true;

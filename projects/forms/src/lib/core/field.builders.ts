@@ -1,9 +1,12 @@
 import {
   CheckBoxConfig,
+  ColorConfig,
   FieldConfigBase,
   NumberConfig,
+  RadioConfig,
   SelectConfig,
   SelectMultiConfig,
+  SlideToggleConfig,
   TextAreaConfig,
   TextConfig
 } from "./field";
@@ -13,24 +16,128 @@ import { ThemePalette } from "@angular/material/core";
 export abstract class FieldBuilderBase<O> {
   abstract readonly __config: FieldConfigBase<O>;
   abstract label(text: string): FieldBuilderBase<O>;
-  abstract hint(text: string): FieldBuilderBase<O>;
+  // abstract hint(text: string): FieldBuilderBase<O>;
+}
+
+export class SlideToggleField<O = boolean> extends FieldBuilderBase<O> {
+  __config: SlideToggleConfig<O>;
+
+  constructor() {
+    super();
+    const defaultValue = false as unknown as O;
+    this.__config = new SlideToggleConfig<O>(defaultValue);
+  }
+
+  label(text: string) {
+    this.__config.label = text;
+    return this;
+  }
+
+  labelPos(pos: "before" | "after") {
+    this.__config.labelPos = pos;
+    return this;
+  }
+
+  theme(value: ThemePalette) {
+    this.__config.theme = value;
+    return this;
+  }
+
+  mustBeTrue() {
+    this.__config.required = true;
+    return this;
+  }
+  // optional() {
+  //   this.__config.required = false;
+  //   return this;
+  // }
+}
+
+export class RadioField<O = LabeledValue> extends FieldBuilderBase<O> {
+  __config: RadioConfig<O>;
+
+  constructor(options: LabeledValue[]) {
+    super();
+    this.__config = new RadioConfig<O>(options);
+  }
+
+  label(text: string) {
+    this.__config.label = text;
+    return this;
+  }
+
+  labelPos(pos: "before" | "after") {
+    this.__config.labelPos = pos;
+    return this;
+  }
+
+  theme(value: ThemePalette) {
+    this.__config.theme = value;
+    return this;
+  }
+
+  optional(): RadioField<LabeledValue | null> {
+    this.__config.required = false;
+    return this as unknown as RadioField<LabeledValue | null>;
+  }
+
+  direction(direction: "row" | "column") {
+    this.__config.direction = direction;
+    return this;
+  }
+
+  options(options: LabeledValue[]) {
+    this.__config._options = options;
+    return this;
+  }
+}
+
+export class ColorField<O = string> extends FieldBuilderBase<O> {
+  __config = new ColorConfig<O>();
+  constructor() {
+    super();
+  }
+
+  label(text: string) {
+    this.__config.label = text;
+    return this;
+  }
+
+  labelPos(pos: "above" | "before" | "after" | "below") {
+    this.__config.labelPos = pos;
+    return this;
+  }
+
+  optional(): ColorField<string | null> {
+    this.__config.required = false;
+    return this as any as ColorField<string | null>;
+  }
+
+  // TODO ADD WARNING WHEN Optional is used with a defaultValue;
+  defaultValue(value: O | null) {
+    this.__config.defaultValue = value;
+    return this;
+  }
+
+  radius(px: number) {
+    this.__config.radius = px;
+    return this;
+  }
+
+  hint(text: string) {
+    this.__config.hint = text;
+    return this;
+  }
 }
 
 export class CheckboxField<O> extends FieldBuilderBase<O> {
   __config = new CheckBoxConfig<O>();
-  constructor(defaultValue: O) {
+  constructor() {
     super();
-    this.__config.defaultValue = defaultValue;
   }
 
-  // TODO ADD hint in html
-  hint(text: string): CheckboxField<O> {
-    this.__config.hint = text;
-    return this;
-  }
-
-  color(theme: ThemePalette) {
-    this.__config.color = theme;
+  theme(value: ThemePalette) {
+    this.__config.themePalette = value;
     return this;
   }
 
@@ -44,12 +151,18 @@ export class CheckboxField<O> extends FieldBuilderBase<O> {
     return this;
   }
 
+  indeterminate(): CheckboxField<boolean | null> {
+    this.__config.indeterminate = true;
+
+    return this as any as CheckboxField<boolean | null>;
+  }
+
   optional(): CheckboxField<boolean | null> {
     this.__config.required = false;
     return this as any as CheckboxField<boolean | null>;
   }
 
-  defaultValue(value: O) {
+  defaultValue(value: O | null) {
     this.__config.defaultValue = value;
     return this;
   }

@@ -16,6 +16,11 @@ import { SelectMultiCtrlComponent } from "./form-controls/select-multi-ctrl/sele
 import { DynamicFormComponent } from "./form/dynamic-form.component";
 import { CheckboxCtrlComponent } from "./form-controls/checkbox-ctrl/checkbox-ctrl.component";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { ColorCtrlComponent } from "./form-controls/color-ctrl/color-ctrl.component";
+import { RadioCtrlComponent } from "./form-controls/radio-ctrl/radio-ctrl.component";
+import { MatRadioModule } from "@angular/material/radio";
+import { SlideToggleCtrlComponent } from "./form-controls/slide-toggle-ctrl/slide-toggle-ctrl.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [
@@ -26,7 +31,10 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     CheckboxCtrlComponent,
     SelectCtrlComponent,
     SelectMultiCtrlComponent,
-    DynamicFormComponent
+    DynamicFormComponent,
+    RadioCtrlComponent,
+    ColorCtrlComponent,
+    SlideToggleCtrlComponent
   ],
 
   imports: [
@@ -39,7 +47,9 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     MatProgressBarModule,
     MatSelectModule,
     MatCheckboxModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatRadioModule,
+    MatSlideToggleModule
   ],
   exports: [DynamicFormComponent]
 })

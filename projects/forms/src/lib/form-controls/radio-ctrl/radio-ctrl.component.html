@@ -1,0 +1,29 @@
+<style>
+  :host {
+    width: 100%;
+  }
+  .dynamic-radio-button {
+    margin: 5px;
+  }
+  .dynamic-form-radio-group {
+    display: flex;
+    margin-top: 10px;
+    align-items: flex-start;
+  }
+</style>
+<label class="mat-body-1">{{ fieldConfig.label }}</label>
+<mat-radio-group
+  [formControl]="formControl"
+  [required]="true"
+  class="dynamic-form-radio-group"
+  [style.flex-direction]="fieldConfig.direction"
+>
+  <mat-radio-button
+    [labelPosition]="fieldConfig.labelPos"
+    [color]="fieldConfig.theme"
+    class="dynamic-radio-button"
+    *ngFor="let option of fieldConfig._options"
+    [value]="option"
+    >{{ option.label }}</mat-radio-button
+  >
+</mat-radio-group>

@@ -12,14 +12,14 @@ import { NumberConfig } from "../../core/field";
 export class NumberCtrlComponent extends BaseCtrl<NumberConfig<number | null>> {
   getValue(): number | null {
     const value = this.formControl.value;
-    return typeof value === "number" ? value : this._fieldConfig.defaultValue;
+    return typeof value === "number" ? value : this.fieldConfig.defaultValue;
   }
 
   setValue(value: unknown): void {
     if (typeof value === "number") {
       this.formControl.setValue(value);
     } else {
-      this.formControl.setValue(this._fieldConfig.defaultValue);
+      this.formControl.setValue(this.fieldConfig.defaultValue);
     }
   }
   constructor() {

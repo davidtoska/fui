@@ -20,7 +20,9 @@ import { DynamicFormComponent } from "../form/dynamic-form.component";
   styleUrls: ["./dynamic-dialog.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DynamicDialogComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DynamicDialogComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   lastMessage: DialogMessage = { kind: "show-form" };
   headline = "";
   saveButtonText = "Save";
@@ -53,23 +55,27 @@ export class DynamicDialogComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     const modelHasNotChanged = !dynamicFormComponent.modelHasChanged;
-    const disableUntilChanged = this.ref.config._config.disableSaveButtonUntilModelChanged;
+    const disableUntilChanged =
+      this.ref.config._config.disableSaveButtonUntilModelChanged;
     if (modelHasNotChanged && disableUntilChanged) {
       return true;
     }
     return false;
   }
 
-  constructor(private readonly ref: DialogFormRef<FormSchema>, private readonly cd: ChangeDetectorRef) {
+  constructor(
+    private readonly ref: DialogFormRef<FormSchema>,
+    private readonly cd: ChangeDetectorRef
+  ) {
     this.form = this.ref.config.form;
     this.width = this.ref.config._config.width;
     this.headline = this.ref.config._config.headline;
     this.saveButtonText = this.ref.config._config.saveButtonText;
     this.cancelButtonText = this.ref.config._config.cancelButtonText;
     const modelChangeSub = this.form.modelChange$.subscribe(model => {
-      // console.log(model);
-      // console.log(model);
-      // console.log(model);
+      console.log(model);
+      console.log(model);
+      console.log(model);
       // console.log(model);
     });
   }

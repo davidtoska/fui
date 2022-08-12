@@ -7,11 +7,10 @@
   }
 </style>
 <!--<mat-form-field>-->
-<mat-checkbox
+<mat-slide-toggle
   [formControl]="formControl"
   [required]="fieldConfig.required"
-  [color]="fieldConfig.themePalette"
+  [color]="fieldConfig.theme"
   [labelPosition]="fieldConfig.labelPos"
-  [indeterminate]="fieldConfig.indeterminate"
-  >{{ fieldConfig.label }}</mat-checkbox
+  >{{ fieldConfig.label }}</mat-slide-toggle
 >
